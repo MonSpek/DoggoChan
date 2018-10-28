@@ -5,3 +5,5 @@ prefixes.json
 coins.json
 xp.json
 *.json
+xp.json
+warnings.json
