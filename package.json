@@ -1,0 +1,22 @@
+{
+  "name": "doggochan",
+  "version": "1.0.0",
+  "description": "peenie bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "John",
+  "license": "ISC",
+  "dependencies": {
+    "array-sort": "^1.0.0",
+    "ascii-art": "^1.4.4",
+    "discord-anti-spam": "^1.1.2",
+    "discord.js": "^11.4.2",
+    "ms": "^2.1.1",
+    "quick.hook": "^1.4.2",
+    "relevant-urban": "^2.0.0",
+    "superagent": "^4.0.0-beta.5",
+    "table": "^5.1.0"
+  }
+}
