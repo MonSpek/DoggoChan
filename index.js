@@ -72,6 +72,7 @@ bot.on("message", async message => {
     if(err) console.log(err)
   });
 
+  //for my server only
   if(message.guild.id === "498112893330391041"){
     let wordfound = false;
     for(var i in bList.words) {
