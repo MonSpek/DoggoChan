@@ -8,6 +8,8 @@ mongoose.connect("mongodb://localhost:27017/DoggoChan", {
 });
 
 module.exports.run = async (bot, message, args) => {
+	await message.delete();
+
 	Money.findOne({
 		userID: message.author.id,
 		serverID: message.guild.id
@@ -29,8 +31,6 @@ module.exports.run = async (bot, message, args) => {
 			message.channel.send("Error")
 		}
 	})
-
-	message.delete().catch(O_o => { });
 }
 
 module.exports.help = {
