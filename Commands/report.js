@@ -5,7 +5,7 @@ const botconfig = require("../botconfig.json"),
 	Reports = require("../models/reports.js");
 
 module.exports.run = async (bot, message, args) => {
-	mongoose.connect('mongodb://localhost/Reports');
+	mongoose.connect('mongodb://localhost:27017/DoggoChan');
 
 	let rUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
 	if (!rUser) return errors.cantfindUser(message.channel);
