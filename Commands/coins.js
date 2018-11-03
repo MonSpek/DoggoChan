@@ -9,12 +9,6 @@ mongoose.connect("mongodb://localhost:27017/DoggoChan", {
 });
 
 module.exports.run = async (bot, message, args) => {
-	// if (!coins[message.author.id]) {
-	// 	coins[message.author.id] = {
-	// 		coins: 0
-	// 	};
-	// }
-
 	Money.findOne({
 		userID: message.author.id,
 		serverID: message.guild.id
