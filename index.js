@@ -45,7 +45,7 @@ bot.on('guildMemberRemove', member => {
 		userID: member.id,
 		serverID: member.guild.id
 	}, (err, res) => {
-		if(err) console.log(err)
+		if (err) console.log(err)
 		console.log(`${member.id} left a server and thus has been removed from the database`)
 	});
 });
@@ -76,14 +76,14 @@ bot.on("message", async message => {
 	let messageArray = message.content.split(" ");
 	let cmd = messageArray[0];
 	let args = messageArray.slice(1);
-	
-	if(message.content.startsWith(prefix) && !message.author.bot && message.channel.type !== "dm") {
+
+	if (message.content.startsWith(prefix) && !message.author.bot && message.channel.type !== "dm") {
 		let commandfile = bot.commands.get(cmd.slice(prefix.length));
 		if (commandfile) commandfile.run(bot, message, args);
-	} else if(!message.author.bot && message.channel.type !== "dm") {
+	} else if (!message.author.bot && message.channel.type !== "dm") {
 		let coinstoadd = Math.floor(Math.random() * 50) + 1;
 		let coinsneeded = Math.floor(Math.random() * 50) + 1;
-		if (coinstoadd == coinsneeded){
+		if (coinstoadd == coinsneeded) {
 			let moneyEmbed = new Discord.RichEmbed()
 				.setAuthor(message.author.username)
 				.setColor(botconfig.doggo)
@@ -104,17 +104,17 @@ bot.on("message", async message => {
 
 					newMoney.save().catch(err => console.log(err));
 
-					message.channel.send(moneyEmbed).then(msg => {msg.delete(5000)});
+					message.channel.send(moneyEmbed).then(msg => { msg.delete(5000) });
 				} else {
 					money.money = money.money + coinstoadd;
 
 					money.save().catch(err => console.log(err));
 
-					message.channel.send(moneyEmbed).then(msg => {msg.delete(5000)});
+					message.channel.send(moneyEmbed).then(msg => { msg.delete(5000) });
 				}
 			})
 		}
-		
+
 		let xpAdd = Math.floor(Math.random() * 7) + 8;
 
 		if (!xp[message.author.id]) {
