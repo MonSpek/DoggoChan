@@ -15,7 +15,6 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 });
 
 fs.readdir("./commands/", (err, files) => {
-
 	if (err) console.log(err);
 	let jsfile = files.filter(f => f.split(".").pop() === "js");
 	if (jsfile.length <= 0) {
@@ -39,6 +38,8 @@ bot.on("ready", () => {
 });
 
 bot.on("message", async message => {
+	if (message.length === 0) return;
+
 	let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
 	if (!prefixes[message.guild.id]) {
 		prefixes[message.guild.id] = {
