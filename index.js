@@ -8,7 +8,6 @@ const botconfig = require("./botconfig.json"),
 	bList = require("./assets/blacklist.json"),
 	errors = require("./utils/errors.js"),
 	Money = require("./models/money.js");
-let coins = require("./coins.json");
 let xp = require("./xp.json");
 
 mongoose.connect('mongodb://localhost:27017/DoggoChan', {
