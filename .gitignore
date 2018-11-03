@@ -1,9 +1,3 @@
-botconfig.json
 start.bat
-xp.json
-prefixes.json
-coins.json
-xp.json
 *.json
-xp.json
-warnings.json
+*.bat
