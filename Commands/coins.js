@@ -1,6 +1,5 @@
 const Discord = require("discord.js"),
 	mongoose = require('mongoose');
-let coins = require("../coins.json");
 const botconfig = require("../botconfig.json"),
 	Money = require("../models/money.js");
 

@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const fs = require("fs");
-let coins = require("../coins.json");
+
+// TODO: port the json system to the mongooseDB
 
 module.exports.run = async (bot, message, args) => {
   //!pay @isatisfied 59345
