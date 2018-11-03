@@ -10,9 +10,10 @@
   "license": "ISC",
   "dependencies": {
     "array-sort": "^1.0.0",
-    "ascii-art": "^1.4.4",
+    "ascii-art": "^1.5.0",
     "discord-anti-spam": "^1.1.2",
     "discord.js": "^11.4.2",
+    "mongoose": "^5.3.9",
     "ms": "^2.1.1",
     "quick.hook": "^1.4.2",
     "relevant-urban": "^2.0.0",
