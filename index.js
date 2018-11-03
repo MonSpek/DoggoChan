@@ -15,6 +15,7 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 });
 
 //TODO: 1) figure out more things to do with mongoose
+//TODO: 2) add server leave, remove from db command
 
 fs.readdir("./commands/", (err, files) => {
 	if (err) console.log(err);
@@ -37,6 +38,16 @@ bot.on("ready", () => {
 		const activity = activities[Math.floor(Math.random() * activities.length)];
 		bot.user.setActivity(activity.text, { type: activity.type });
 	}, 60000);
+});
+
+bot.on('guildMemberRemove', member => {
+	Money.findOneAndDelete({
+		userID: member.id,
+		serverID: member.guild.id
+	}, (err, res) => {
+		if(err) console.log(err)
+		console.log(`${member.id} left a server and thus has been removed from the database`)
+	});
 });
 
 bot.on("message", async message => {
