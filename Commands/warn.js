@@ -6,6 +6,8 @@ const botconfig = require("../botconfig.json");
 const errors = require("../utils/errors.js");
 
 module.exports.run = async (bot, message, args) => {
+	await message.delete();
+
 	if (!message.member.hasPermission("MANAGE_MEMBERS")) return errors.noPerms(message, "MANAGE_MEMBERS");
 	let wUser = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0])
 	if (!wUser) return errors.cantfindUser(message.channel);
@@ -68,7 +70,7 @@ module.exports.run = async (bot, message, args) => {
 
 		setTimeout(function () {
 			wUser.removeRole(muterole.id)
-			message.reply(`<@${wUser.id}> has been unmuted.`)
+			message.reply(`<@${wUser.id}> has been unmuted.`);
 		}, ms(mutetime))
 	}
 
@@ -76,27 +78,27 @@ module.exports.run = async (bot, message, args) => {
 		let muterole = message.guild.roles.find(`name`, "muted");
 		let mutetime = "24h";
 		await (wUser.addRole(muterole.id));
-		message.channel.send(`<@${wUser.id}> has been temporarily muted`);
+		message.channel.send(`<@${wUser.id}> has been temporarily muted`).then(msg => { msg.delete(5000) });
 
 		setTimeout(function () {
 			wUser.removeRole(muterole.id)
-			message.reply(`<@${wUser.id}> has been unmuted.`)
+			message.reply(`<@${wUser.id}> has been unmuted.`);
 		}, ms(mutetime))
 	}
 	if (warns[wUser.id].warns == 3) {
 		let muterole = message.guild.roles.find(`name`, "muted");
 		let mutetime = "48h";
 		await (wUser.addRole(muterole.id));
-		message.channel.send(`<@${wUser.id}> has been temporarily muted`);
+		message.channel.send(`<@${wUser.id}> has been temporarily muted`).then(msg => { msg.delete(5000) });
 
 		setTimeout(function () {
 			wUser.removeRole(muterole.id)
-			message.reply(`<@${wUser.id}> has been unmuted.`)
+			message.reply(`<@${wUser.id}> has been unmuted.`);
 		}, ms(mutetime))
 	}
 	if (warns[wUser.id].warns == 4) {
 		message.guild.member(wUser).ban(reason);
-		message.reply(`<@${wUser.id}> has been banned.`)
+		message.reply(`<@${wUser.id}> has been banned.`).then(msg => { msg.delete(10000) });
 	}
 }
 
