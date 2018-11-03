@@ -14,6 +14,8 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 	useNewUrlParser: true
 });
 
+//TODO: 1) figure out more things to do with mongoose
+
 fs.readdir("./commands/", (err, files) => {
 	if (err) console.log(err);
 	let jsfile = files.filter(f => f.split(".").pop() === "js");
