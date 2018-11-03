@@ -38,8 +38,6 @@ bot.on("ready", () => {
 });
 
 bot.on("message", async message => {
-	if (message.length === 0) return;
-
 	let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
 	if (!prefixes[message.guild.id]) {
 		prefixes[message.guild.id] = {
@@ -60,11 +58,11 @@ bot.on("message", async message => {
 		}
 	}
 
+	let prefix = prefixes[message.guild.id].prefixes;
+
 	let messageArray = message.content.split(" ");
 	let cmd = messageArray[0];
 	let args = messageArray.slice(1);
-
-	let prefix = prefixes[message.guild.id].prefixes;
 	
 	if(message.content.startsWith(prefix) && !message.author.bot && message.channel.type !== "dm") {
 		let commandfile = bot.commands.get(cmd.slice(prefix.length));
