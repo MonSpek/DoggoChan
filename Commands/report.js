@@ -5,7 +5,11 @@ const botconfig = require("../botconfig.json"),
 	Reports = require("../models/reports.js");
 
 module.exports.run = async (bot, message, args) => {
-	mongoose.connect('mongodb://localhost:27017/DoggoChan');
+	await message.delete();
+
+	mongoose.connect('mongodb://localhost:27017/DoggoChan', {
+		useNewUrlParser: true
+	});
 
 	let rUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
 	if (!rUser) return errors.cantfindUser(message.channel);
@@ -41,7 +45,6 @@ module.exports.run = async (bot, message, args) => {
 	.then(result => console.log(result))
 	.catch(err => console.log(err));
 
-	message.delete().catch(O_o => { });
 	reportschannel.send(reportEmbed);
 	message.channel.send(replyEmbed).then(msg => {msg.delete(5000)});
 
