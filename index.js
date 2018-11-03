@@ -69,30 +69,6 @@ bot.on("message", async message => {
 		let commandfile = bot.commands.get(cmd.slice(prefix.length));
 		if (commandfile) commandfile.run(bot, message, args);
 	} else if(!message.author.bot && message.channel.type !== "dm") {
-		// if (!coins[message.author.id]) {
-		// 	coins[message.author.id] = {
-		// 		coins: 0
-		// 	};
-		// }
-	
-		// let coinAmt = Math.floor(Math.random() * 15) + 1;
-		// let baseAmt = Math.floor(Math.random() * 15) + 1;
-	
-		// if (coinAmt == baseAmt) {
-		// 	coins[message.author.id] = {
-		// 		coins: coins[message.author.id].coins + coinAmt
-		// 	};
-		// 	fs.writeFile("./coins.json", JSON.stringify(coins), (err) => {
-		// 		if (err) console.log(err);
-		// 	});
-		// 	let coinEmbed = new Discord.RichEmbed()
-		// 		.setAuthor(message.author.username)
-		// 		.setColor(botconfig.doggo)
-		// 		.addField("💸", `${coinAmt} coins given to ${message.author}! 🔥`);
-	
-		// 	message.channel.send(coinEmbed).then(msg => { msg.delete(5000) });
-		// }
-	
 		let coinstoadd = Math.floor(Math.random() * 50) + 1;
 		let coinsneeded = Math.floor(Math.random() * 50) + 1;
 		if (coinstoadd == coinsneeded){
