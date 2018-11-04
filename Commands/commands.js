@@ -21,7 +21,8 @@ module.exports.run = async (bot, message, args) => {
 		.setColor(config.doggo)
 		.setAuthor(message.author.tag)
 		.setThumbnail(bot.user.displayAvatarURL)
-		.setDescription("Command list");
+		.setDescription("Command list")
+		.setFooter("All commands have to have a prefix in front of them, the defult is \".\" ");
 
 		let result = jsfile.forEach((f, i) => {
 			let props = require(`./${f}`);
