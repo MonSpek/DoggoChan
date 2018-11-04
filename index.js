@@ -15,6 +15,7 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 });
 
 //TODO: 1) figure out more things to do with mongoose
+//TODO: 2) add server left message
 
 fs.readdir("./commands/", (err, files) => {
 	if (err) console.log(err);
@@ -40,7 +41,19 @@ bot.on("ready", () => {
 });
 
 bot.on('guildMemberAdd', member => {
-	
+	//!only works on my personal server
+	if(member.guild.id === "498112893330391041") {
+		let msgChl = member.guild.channels.find(`name`, "main-chat");
+		if(!msgChl) return console.log("New member error")
+
+		let newMemEmbed = new Discord.RichEmbed()
+		.setDescription("Welcome")
+		.setColor(botconfig.doggo)
+		.setThumbnail(member.guild.iconURL)
+		.addField(`Welcome to ${member.guild.name}!`, `Hello, ${member} you  are the ${member.guild.memberCount}th member`);
+
+		msgChl.send(newMemEmbed).then(msg => msg.delete(3600000)); //!Deletes after 1 hour
+	}
 });
 
 bot.on('guildMemberRemove', member => {
