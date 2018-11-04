@@ -18,5 +18,7 @@ module.exports.run = async (bot, message, args) => {
 }
 
 module.exports.help = {
-    name: "trump"
+    name: "trump",
+    role: "normal",
+    description: "Makes trump tweet anything"
 }

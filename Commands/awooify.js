@@ -26,5 +26,7 @@ module.exports.run = async (bot, message, args) => {
 }
 
 module.exports.help = {
-    name: "awooify"
+    name: "awooify",
+    role: "normal",
+    description: "awootify your pfp"
 }

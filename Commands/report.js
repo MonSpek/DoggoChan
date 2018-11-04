@@ -51,5 +51,7 @@ module.exports.run = async (bot, message, args) => {
 }
 
 module.exports.help = {
-	name: "report"
+	name: "report",
+	role: "normal",
+	description: "Reports a user to the mods (**MUST SUPPLY A REASON**)"
 }

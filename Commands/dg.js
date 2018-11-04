@@ -8,5 +8,7 @@ module.exports.run = async (bot, message, args) => {
   message.channel.send(music[result]);
 }
 module.exports.help = {
-  name:"dg"
+  name: "dg",
+  role: "hidden",
+  description: "Posts a Death Grips song"
 }

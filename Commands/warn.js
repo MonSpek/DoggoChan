@@ -26,13 +26,13 @@ module.exports.run = async (bot, message, args) => {
 	});
 
 	let warnEmbed = new Discord.RichEmbed()
-		.setDescription("Warns")
-		.setAuthor(message.author.username)
-		.setColor(botconfig.red)
-		.addField("Warned User", `<@${wUser.id}>`)
-		.addField("Warned In", message.channel)
-		.addField("Number of Warnings", warns[wUser.id].warns)
-		.addField("Reason", reason);
+	.setDescription("Warns")
+	.setAuthor(message.author.username)
+	.setColor(botconfig.red)
+	.addField("Warned User", `<@${wUser.id}>`)
+	.addField("Warned In", message.channel)
+	.addField("Number of Warnings", warns[wUser.id].warns)
+	.addField("Reason", reason);
 
 	let warnchannel = message.guild.channels.find(`name`, "logs");
 	if (!warnchannel) return message.reply("Couldn't find channel");
@@ -103,5 +103,7 @@ module.exports.run = async (bot, message, args) => {
 }
 
 module.exports.help = {
-	name: "warn"
+	name: "warn", 
+	role: "admin",
+	description: "Warns a user and adds them to the database. if they get enough warns a user will get banned"
 }

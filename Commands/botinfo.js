@@ -8,11 +8,14 @@ module.exports.run = async (bot, message, args) => {
     .setThumbnail(bicon)
     .addField("Bot Name", bot.user.username)
     .addField("Created On", bot.user.createdAt)
-    .addField("Created by", "Butch la Bully");
+    .addField("Created by", "Butch la Bully")
+    .addField("Github Repo", "https://github.com/MonSpek/DoggoChan");
 
     message.channel.send(botembed);
 }
 
 module.exports.help = {
-  name:"botinfo"
+  name: "botinfo",
+  role: "normal",
+  description: "Gives info on the bot."
 }

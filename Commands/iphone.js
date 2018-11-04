@@ -26,5 +26,7 @@ module.exports.run = async (bot, message, args) => {
 }
 
 module.exports.help = {
-    name: "iphone"
+    name: "iphone",
+    role: "normal",
+    description: "Puts a picture on an iPhone screen"
 }

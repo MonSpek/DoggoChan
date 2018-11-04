@@ -25,5 +25,7 @@ module.exports.run = async (bot, message, args, tools) => {
     message.channel.send(embed);
 }
 module.exports.help = {
-    name: "udic"
+    name: "udic",
+    role: "normal", 
+    description: "Looks something up on Urban Dictionary"
 }

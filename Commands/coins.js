@@ -34,5 +34,7 @@ module.exports.run = async (bot, message, args) => {
 }
 
 module.exports.help = {
-	name: "coins"
+	name: "coins",
+	role: "normal",
+	description: "Checks how many coins you have."
 }
