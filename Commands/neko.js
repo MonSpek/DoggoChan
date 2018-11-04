@@ -1,8 +1,6 @@
 const fetch = require('node-superfetch');
 
 module.exports.run = async (bot, message, args) => {
-    await message.delete();
-
     fetch.get("https://nekos.life/api/neko").then(res =>
         message.channel.send({
             "embed": {
