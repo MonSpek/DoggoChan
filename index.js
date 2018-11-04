@@ -114,7 +114,7 @@ bot.on("message", async message => {
 		};
 	}
 
-	//for my server only
+	//!for my server only
 	if (message.guild.id === "498112893330391041") {
 		let wordfound = false;
 		for (var i in bList.words) {
@@ -123,7 +123,7 @@ bot.on("message", async message => {
 
 		if (wordfound) {
 			message.delete();
-			errors.bannedWord(message);
+			return errors.bannedWord(message);
 		}
 	}
 

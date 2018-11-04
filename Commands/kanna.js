@@ -5,10 +5,6 @@ module.exports.run = async (bot, message, args) => {
     if (!text) {
         message.channel.send("You didn't give me any text!").then(msg => {msg.delete(5000)});
     } else {
-        //var newText = text.split(' ').join('%20');
-
-        //console.log(newText);
-
         fetch.get(`https://nekobot.xyz/api/imagegen?type=kannagen&text=${text}`).then(res =>
             message.channel.send({
                 "embed": {
