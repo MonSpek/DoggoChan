@@ -1,7 +1,7 @@
 const Discord = require("discord.js"),
 	fs = require("fs"),
 	mongoose = require("mongoose");
-const bot = new Discord.Client({ disableEveryone: true });
+const bot = new Discord.Client({ disableEveryone: false });
 bot.commands = new Discord.Collection();
 const botconfig = require("./botconfig.json"),
 	activities = require("./assets/activity.json"),
@@ -15,7 +15,6 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 });
 
 //TODO: 1) figure out more things to do with mongoose
-//TODO: 2) add server leave, remove from db command
 
 fs.readdir("./commands/", (err, files) => {
 	if (err) console.log(err);
@@ -38,6 +37,10 @@ bot.on("ready", () => {
 		const activity = activities[Math.floor(Math.random() * activities.length)];
 		bot.user.setActivity(activity.text, { type: activity.type });
 	}, 60000);
+});
+
+bot.on('guildMemberAdd', member => {
+	
 });
 
 bot.on('guildMemberRemove', member => {

@@ -15,6 +15,7 @@
     "discord.js": "^11.4.2",
     "mongoose": "^5.3.9",
     "ms": "^2.1.1",
+    "node-superfetch": "^0.1.9",
     "quick.hook": "^1.4.2",
     "relevant-urban": "^2.0.0",
     "superagent": "^4.0.0-beta.5",

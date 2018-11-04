@@ -20,6 +20,7 @@ module.exports.run = async (bot, message, args) => {
 
         let embed = new Discord.RichEmbed()
             .setTitle("Coin leaderboard")
+            .setThumbnail(message.guild.iconURL);
 
         if (res.length === 0) {
             embed.setColor(config.red);
