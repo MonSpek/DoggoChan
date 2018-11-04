@@ -44,15 +44,27 @@ bot.on('guildMemberAdd', member => {
 	//!only works on my personal server
 	if(member.guild.id === "498112893330391041") {
 		let msgChl = member.guild.channels.find(`name`, "main-chat");
-		if(!msgChl) return console.log("New member error")
+		if(!msgChl) return console.log("New member error");
+
+		let logChl = member.guild.channels.find(`name`, "logs");
+		if(!logChl) return console.log("log error");
 
 		let newMemEmbed = new Discord.RichEmbed()
 		.setDescription("Welcome")
 		.setColor(botconfig.doggo)
 		.setThumbnail(member.guild.iconURL)
-		.addField(`Welcome to ${member.guild.name}!`, `Hello, ${member} you  are the ${member.guild.memberCount}th member`);
+		.addField(`Welcome to ${member.guild.name}!`, `Hello, ${member} you are the ${member.guild.memberCount}th member`);
+
+		let logEmbed = new Discord.RichEmbed()
+		.setDescription("New Member")
+		.setColor(botconfig.doggo)
+		.setThumbnail(member.guild.iconURL)
+		.addField("Member Joined", `${member} has joined ${member.guild.name} and is the ${member.guild.memberCount}th member`)
+		.addField("**User's ID**:", `${member.id}`)
+		.addField("**Joined On**:", `${member.joinedAt}`);
 
 		msgChl.send(newMemEmbed).then(msg => msg.delete(3600000)); //!Deletes after 1 hour
+		logChl.send(logEmbed); //logs
 	}
 });
 
