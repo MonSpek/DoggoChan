@@ -15,6 +15,7 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 });
 
 //TODO: 1) figure out more things to do with mongoose
+//TODO: 2) add the word filter to editted messages
 
 fs.readdir("./commands/", (err, files) => {
 	if (err) console.log(err);
