@@ -106,6 +106,37 @@ bot.on('guildMemberRemove', member => {
 	}
 });
 
+bot.on("messageUpdate", async message => {
+	//!for my server only
+	if (message.guild.id === "498112893330391041") {
+		// let wordfound = false;
+		// for (var i in bList.words) {
+		// 	console.log("start");
+		// 	if (message.content.toLowerCase().includes(bList.words[i].toLowerCase())) wordfound = true;
+		// 	if (wordfound) break;
+		// }
+
+		// if (wordfound) {
+		// 	message.delete();
+		// 	errors.bannedWord(message);
+		// }
+		
+		if(!message.author.bot){
+			let logChl = message.guild.channels.find(`name`, "logs");
+			if (!logChl) return console.log("log error");
+
+			var d = new Date();
+			let logEmbed = new Discord.RichEmbed()
+			.setDescription("A User Has Edditted A Post")
+			.setColor(botconfig.doggo)
+			.addField(`${message.author} Eddited A Post:`, `${message.content} ()`)
+			.addField("**Date**:", `${d.toString()}`);
+
+			logChl.send(logEmbed);
+		}
+	}
+});
+
 bot.on("message", async message => {
 	let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
 	if (!prefixes[message.guild.id]) {
@@ -115,15 +146,18 @@ bot.on("message", async message => {
 	}
 
 	//!for my server only
-	if (message.guild.id === "498112893330391041") {
-		let wordfound = false;
-		for (var i in bList.words) {
-			if (message.content.toLowerCase().includes(bList.words[i].toLowerCase())) wordfound = true;
-		}
+	if (message.guild.id !== "498112893330391041") {
+		if(message.author.id === "500018898935218197"){
+			let wordfound = false;
+			for (var i in bList.words) {
+				if (message.content.toLowerCase().includes(bList.words[i].toLowerCase())) wordfound = true;
+				if (wordfound) break;
+			}
 
-		if (wordfound) {
-			message.delete();
-			return errors.bannedWord(message);
+			if (wordfound) {
+				message.delete();
+				return errors.bannedWord(message);
+			}
 		}
 	}
 
