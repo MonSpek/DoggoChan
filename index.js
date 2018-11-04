@@ -15,7 +15,6 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 });
 
 //TODO: 1) figure out more things to do with mongoose
-//TODO: 2) add server left message
 
 fs.readdir("./commands/", (err, files) => {
 	if (err) console.log(err);
@@ -54,7 +53,7 @@ bot.on('guildMemberAdd', member => {
 		.setColor(botconfig.doggo)
 		.setThumbnail(member.guild.iconURL)
 		.addField(`Welcome to ${member.guild.name}!`, `Hello, ${member} you are the ${member.guild.memberCount}th member`);
-
+		
 		let logEmbed = new Discord.RichEmbed()
 		.setDescription("New Member")
 		.setColor(botconfig.doggo)
@@ -69,6 +68,7 @@ bot.on('guildMemberAdd', member => {
 });
 
 bot.on('guildMemberRemove', member => {
+	//! Removes left use from database
 	Money.findOneAndDelete({
 		userID: member.id,
 		serverID: member.guild.id
@@ -76,6 +76,34 @@ bot.on('guildMemberRemove', member => {
 		if (err) console.log(err)
 		console.log(`${member.id} left a server and thus has been removed from the database`)
 	});
+
+	//!only works on my personal server
+	if(member.guild.id === "498112893330391041") {
+		let msgChl = member.guild.channels.find(`name`, "main-chat");
+		if(!msgChl) return console.log("New member error");
+
+		let logChl = member.guild.channels.find(`name`, "logs");
+		if(!logChl) return console.log("log error");
+		
+		let leftMemEmbed = new Discord.RichEmbed()
+		.setDescription("User Left")
+		.setColor(botconfig.doggo)
+		.setThumbnail(member.guild.iconURL)
+		.addField("A User Has Left The Server", `${member} has left ${member.guild.name}, there are  now ${member.guild.memberCount} members.`);
+
+		var d = new Date();
+		let logEmbed = new Discord.RichEmbed()
+		.setDescription("User Left")
+		.setColor(botconfig.doggo)
+		.setThumbnail(member.guild.iconURL)
+		.addField("Member Left", `${member} has left ${member.guild.name} and there are ${member.guild.memberCount} members left`)
+		.addField("**User's ID**:", `${member.id}`)
+		.addField("**Joined On**:", `${member.joinedAt}`)
+		.addField("**Left At**:", `${d.toString()}`);
+
+		msgChl.send(leftMemEmbed).then(msg => msg.delete(120000)); //!Delets after 2 minutes
+		logChl.send(logEmbed);
+	}
 });
 
 bot.on("message", async message => {
