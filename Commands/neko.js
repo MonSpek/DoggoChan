@@ -7,7 +7,7 @@ module.exports.run = async (bot, message, args) => {
         message.channel.send({
             "embed": {
                 "title": "Nekos!",
-                "color": 0255255,
+                "color": 545762,
                 "footer": {
                     "icon_url": "https://image.freepik.com/free-icon/question-mark_318-52837.jpg",
                     "text": "Powered by nekos.life API"
