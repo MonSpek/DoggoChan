@@ -41,8 +41,8 @@ bot.on("ready", () => {
 });
 
 bot.on('guildMemberAdd', member => {
-	//!only works on my personal server
-	if(member.guild.id === "498112893330391041") {
+	//!only works on my personal server or friend's server
+	if(member.guild.id === "498112893330391041" || member.guild.id === "448578730151903263") {
 		let msgChl = member.guild.channels.find(`name`, "main-chat");
 		if(!msgChl) return console.log("New member error");
 
@@ -78,8 +78,8 @@ bot.on('guildMemberRemove', member => {
 		console.log(`${member.id} left a server and thus has been removed from the database`)
 	});
 
-	//!only works on my personal server
-	if(member.guild.id === "498112893330391041") {
+	//!only works on my personal or doggos's server
+	if(member.guild.id === "498112893330391041" || member.guild.id === "448578730151903263") {
 		let msgChl = member.guild.channels.find(`name`, "main-chat");
 		if(!msgChl) return console.log("New member error");
 
