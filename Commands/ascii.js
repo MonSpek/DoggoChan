@@ -1,6 +1,5 @@
 const ascii = require("ascii-art");
 const Discord = require("discord.js");
-const bList = require("../assets/blacklist.json");
 
 module.exports.run = async (bot, message, args, ops) => {
     ascii.font(args.join(" "), "Doom", function (rendered) {

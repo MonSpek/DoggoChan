@@ -1,9 +1,10 @@
 const fetch = require('node-superfetch');
+const errors = require('../utils/errors.js');
 
 module.exports.run = async (bot, message, args) => {
     let text = args.join(" ");
     if (!text) {
-        message.channel.send("You didn't give me any text!").then(msg => {msg.delete(5000)});
+        errors.noApiText(message);
     } else {
         fetch.get(`https://nekobot.xyz/api/imagegen?type=kannagen&text=${text}`).then(res =>
             message.channel.send({

@@ -4,10 +4,10 @@ const config = require("../botconfig.json")
 
 module.exports.noPerms = (message, perm) => {
     let embed = new Discord.RichEmbed()
-    .setAuthor(message.author.username)
-    .setColor(botconfig.red)
-    .setTitle("NO PERMS")
-    .addField("Insufficent permission", perm);
+        .setAuthor(message.author.username)
+        .setColor(botconfig.red)
+        .setTitle("NO PERMS")
+        .addField("Insufficent permission", perm);
 
     message.channel.send(embed).then(m => m.delete(5000));
 }
@@ -53,7 +53,7 @@ module.exports.noReason = (channel) => {
 module.exports.noText = (channel) => {
     let embed = new Discord.RichEmbed()
         .setTitle("Error")
-        .setDescription("Please specify some text!")
+        .setDescription("Please give me some text!")
         .setColor(config.red);
 
     channel.send(embed).then(m => m.delete(5000));
@@ -99,6 +99,15 @@ module.exports.inValCalc = (message) => {
     let embed = new Discord.RichEmbed()
         .setTitle("Error")
         .setDescription("Invalid Calculation")
+        .setColor(config.red);
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
+
+module.exports.noApiText = (message) => {
+    let embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("Please give me some text!")
         .setColor(config.red);
 
     message.channel.send(embed).then(m => m.delete(5000));

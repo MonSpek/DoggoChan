@@ -1,7 +1,7 @@
-const Discord = require("discord.js");
-const urban = require("relevant-urban");
-const errors = require("../utils/errors.js");
-const config = require("../botconfig.json");
+const Discord = require("discord.js"),
+    urban = require("relevant-urban");
+const errors = require("../utils/errors.js"),
+    config = require("../botconfig.json");
 
 module.exports.run = async (bot, message, args, tools) => {
     if(!args[0]) return errors.noText(message.channel);
