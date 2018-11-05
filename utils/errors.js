@@ -76,3 +76,17 @@ module.exports.bannedWord = (message) => {
 
     message.channel.send(embed).then(m => m.delete(5000));
 }
+
+module.exports.noCalc = (message) => {
+    let embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("Please give me something to solve")
+        .setColor(config.red);
+}
+
+module.exports.inValCalc = (message) => {
+    let embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("Invalid Calculation")
+        .setColor(config.red);
+}
