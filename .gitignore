@@ -1,3 +1,4 @@
 *.json
 *.bat
 assets/blacklist.json
+xp.json
