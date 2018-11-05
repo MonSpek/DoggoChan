@@ -77,11 +77,22 @@ module.exports.bannedWord = (message) => {
     message.channel.send(embed).then(m => m.delete(5000));
 }
 
+module.exports.emptyQuestion = (message) => {
+    let embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("Bork! Please give me a full question!")
+        .setColor(config.red);
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
+
 module.exports.noCalc = (message) => {
     let embed = new Discord.RichEmbed()
         .setTitle("Error")
         .setDescription("Please give me something to solve")
         .setColor(config.red);
+
+    message.channel.send(embed).then(m => m.delete(5000));
 }
 
 module.exports.inValCalc = (message) => {
@@ -89,4 +100,6 @@ module.exports.inValCalc = (message) => {
         .setTitle("Error")
         .setDescription("Invalid Calculation")
         .setColor(config.red);
+
+    message.channel.send(embed).then(m => m.delete(5000));
 }
