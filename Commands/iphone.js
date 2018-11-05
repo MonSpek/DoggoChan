@@ -9,6 +9,9 @@ module.exports.run = async (bot, message, args) => {
                     "color": 545762,
                     "image": {
                         "url": res.body.message
+                    },
+                    "footer": {
+                        "text": `Done by ${message.author.username}`
                     }
                 }
             }));
@@ -19,6 +22,9 @@ module.exports.run = async (bot, message, args) => {
                     "color": 545762,
                     "image": {
                         "url": res.body.message
+                    },
+                    "footer": {
+                        "text": `Done by ${message.author.username}`
                     }
                 }
             }));
