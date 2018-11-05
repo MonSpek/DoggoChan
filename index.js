@@ -42,26 +42,26 @@ bot.on("ready", () => {
 
 bot.on('guildMemberAdd', member => {
 	//!only works on my personal server or friend's server
-	if(member.guild.id === "498112893330391041" || member.guild.id === "448578730151903263") {
+	if (member.guild.id === "498112893330391041" || member.guild.id === "448578730151903263") {
 		let msgChl = member.guild.channels.find(`name`, "main-chat");
-		if(!msgChl) return console.log("New member error");
+		if (!msgChl) return console.log("New member error");
 
 		let logChl = member.guild.channels.find(`name`, "logs");
-		if(!logChl) return console.log("log error");
+		if (!logChl) return console.log("log error");
 
 		let newMemEmbed = new Discord.RichEmbed()
-		.setDescription("Welcome")
-		.setColor(botconfig.doggo)
-		.setThumbnail(member.guild.iconURL)
-		.addField(`Welcome to ${member.guild.name}!`, `Hello, ${member} you are the ${member.guild.memberCount}th member`);
-		
+			.setDescription("Welcome")
+			.setColor(botconfig.doggo)
+			.setThumbnail(member.guild.iconURL)
+			.addField(`Welcome to ${member.guild.name}!`, `Hello, ${member} you are the ${member.guild.memberCount}th member`);
+
 		let logEmbed = new Discord.RichEmbed()
-		.setDescription("New Member")
-		.setColor(botconfig.doggo)
-		.setThumbnail(member.guild.iconURL)
-		.addField("Member Joined", `${member} has joined ${member.guild.name} and is the ${member.guild.memberCount}th member`)
-		.addField("**User's ID**:", `${member.id}`)
-		.addField("**Joined On**:", `${member.joinedAt}`);
+			.setDescription("New Member")
+			.setColor(botconfig.doggo)
+			.setThumbnail(member.guild.iconURL)
+			.addField("Member Joined", `${member} has joined ${member.guild.name} and is the ${member.guild.memberCount}th member`)
+			.addField("**User's ID**:", `${member.id}`)
+			.addField("**Joined On**:", `${member.joinedAt}`);
 
 		msgChl.send(newMemEmbed).then(msg => msg.delete(3600000)); //!Deletes after 1 hour
 		logChl.send(logEmbed); //logs
@@ -79,28 +79,28 @@ bot.on('guildMemberRemove', member => {
 	});
 
 	//!only works on my personal or doggos's server
-	if(member.guild.id === "498112893330391041" || member.guild.id === "448578730151903263") {
+	if (member.guild.id === "498112893330391041" || member.guild.id === "448578730151903263") {
 		let msgChl = member.guild.channels.find(`name`, "main-chat");
-		if(!msgChl) return console.log("New member error");
+		if (!msgChl) return console.log("New member error");
 
 		let logChl = member.guild.channels.find(`name`, "logs");
-		if(!logChl) return console.log("log error");
-		
+		if (!logChl) return console.log("log error");
+
 		let leftMemEmbed = new Discord.RichEmbed()
-		.setDescription("User Left")
-		.setColor(botconfig.doggo)
-		.setThumbnail(member.guild.iconURL)
-		.addField("A User Has Left The Server", `${member} has left ${member.guild.name}, there are  now ${member.guild.memberCount} members.`);
+			.setDescription("User Left")
+			.setColor(botconfig.doggo)
+			.setThumbnail(member.guild.iconURL)
+			.addField("A User Has Left The Server", `${member} has left ${member.guild.name}, there are  now ${member.guild.memberCount} members.`);
 
 		var d = new Date();
 		let logEmbed = new Discord.RichEmbed()
-		.setDescription("User Left")
-		.setColor(botconfig.doggo)
-		.setThumbnail(member.guild.iconURL)
-		.addField("Member Left", `${member} has left ${member.guild.name} and there are ${member.guild.memberCount} members left`)
-		.addField("**User's ID**:", `${member.id}`)
-		.addField("**Joined On**:", `${member.joinedAt}`)
-		.addField("**Left At**:", `${d.toString()}`);
+			.setDescription("User Left")
+			.setColor(botconfig.doggo)
+			.setThumbnail(member.guild.iconURL)
+			.addField("Member Left", `${member} has left ${member.guild.name} and there are ${member.guild.memberCount} members left`)
+			.addField("**User's ID**:", `${member.id}`)
+			.addField("**Joined On**:", `${member.joinedAt}`)
+			.addField("**Left At**:", `${d.toString()}`);
 
 		msgChl.send(leftMemEmbed).then(msg => msg.delete(120000)); //!Delets after 2 minutes
 		logChl.send(logEmbed);
@@ -110,28 +110,16 @@ bot.on('guildMemberRemove', member => {
 bot.on("messageUpdate", async message => {
 	//!for my server only
 	if (message.guild.id === "498112893330391041") {
-		// let wordfound = false;
-		// for (var i in bList.words) {
-		// 	console.log("start");
-		// 	if (message.content.toLowerCase().includes(bList.words[i].toLowerCase())) wordfound = true;
-		// 	if (wordfound) break;
-		// }
-
-		// if (wordfound) {
-		// 	message.delete();
-		// 	errors.bannedWord(message);
-		// }
-		
-		if(!message.author.bot){
+		if (!message.author.bot) {
 			let logChl = message.guild.channels.find(`name`, "logs");
 			if (!logChl) return console.log("log error");
 
 			var d = new Date();
 			let logEmbed = new Discord.RichEmbed()
-			.setDescription("A User Has Edditted A Post")
-			.setColor(botconfig.doggo)
-			.addField(`${message.author} Eddited A Post:`, `${message.content} ()`)
-			.addField("**Date**:", `${d.toString()}`);
+				.setDescription("A User Has Edditted A Post")
+				.setColor(botconfig.doggo)
+				.addField(`${message.author} Eddited A Post:`, `${message.content} ()`)
+				.addField("**Date**:", `${d.toString()}`);
 
 			logChl.send(logEmbed);
 		}
@@ -148,7 +136,7 @@ bot.on("message", async message => {
 
 	//!for my server only
 	if (message.guild.id !== "498112893330391041") {
-		if(message.author.id === "500018898935218197"){
+		if (message.author.id === "500018898935218197") {
 			let wordfound = false;
 			for (var i in bList.words) {
 				if (message.content.toLowerCase().includes(bList.words[i].toLowerCase())) wordfound = true;
