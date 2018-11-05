@@ -120,7 +120,7 @@ bot.on("messageUpdate", async message => {
 				.setColor(botconfig.doggo)
 				.addField(`${message.author} Eddited A Post:`, `${message.content} ()`)
 				.addField("**Date**:", `${d.toString()}`);
-
+			
 			logChl.send(logEmbed);
 		}
 	}
@@ -188,7 +188,7 @@ bot.on("message", async message => {
 					money.money = money.money + coinstoadd;
 
 					money.save().catch(err => console.log(err));
-
+					
 					message.channel.send(moneyEmbed).then(msg => { msg.delete(5000) });
 				}
 			})
