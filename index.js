@@ -69,7 +69,7 @@ bot.on('guildBanAdd', (guild, user) => {
 	}, (err, ban) => {
 		if (err) console.log(err);
 
-		if(!ban) {
+		if (!ban) {
 			const newBan = new banMongoose({
 				userID: user.id,
 				userName: user.username,
@@ -95,7 +95,7 @@ const applyText = (canvas, text) => {
 	do {
 		//* Sets the font
 		ctx.font = `${fontSize -= 10}px sans-serif`;
-	} while (ctx.measureText(text).width > canvas.width - 300); 
+	} while (ctx.measureText(text).width > canvas.width - 300);
 
 	return ctx.font;
 };
@@ -122,7 +122,7 @@ bot.on('guildMemberAdd', async member => {
 		userID: member.id,
 		serverID: member.guild.id
 	}, (err, xp) => {
-		if (err) console.log (err);
+		if (err) console.log(err);
 
 		if (!xp) {
 			const newXP = new xpMongoose({
