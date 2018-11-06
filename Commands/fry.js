@@ -34,5 +34,5 @@ module.exports.run = async (bot, message, args) => {
 module.exports.help = {
     name: "fry",
     role: "fun",
-    description: "Puts a picture on an iPhone screen"
+    description: "Deep frys a picture"
 }
