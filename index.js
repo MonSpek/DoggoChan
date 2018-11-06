@@ -100,6 +100,20 @@ const applyText = (canvas, text) => {
 	return ctx.font;
 };
 
+const applyText2 = (canvas, text) => {
+	const ctx = canvas.getContext('2d');
+
+	//* Font size
+	let fontSize = 80;
+
+	do {
+		//* Sets the font
+		ctx.font = `${fontSize -= 10}px sans-serif`;
+	} while (ctx.measureText(text).width > canvas.width - 300);
+
+	return ctx.font;
+};
+
 bot.on('guildMemberAdd', async member => {
 	Money.findOne({
 		userID: member.id,
@@ -162,6 +176,10 @@ bot.on('guildMemberAdd', async member => {
 	ctx.font = applyText(canvas, `${member.displayName}!`); //* assigns font
 	ctx.fillStyle = '#ffffff';
 	ctx.fillText(`${member.displayName}!`, canvas.width / 2.5, canvas.height / 1.8);
+
+	ctx.font = applyText2(canvas, `You are the ${member.guild.memberCount}th member!`); //* assigns font
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText(`You are the ${member.guild.memberCount}th member!`, canvas.width / 2.5, canvas.height / 1.3);
 
 	//* Makes avatar circuliar
 	ctx.beginPath();
