@@ -11,28 +11,6 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 module.exports.run = async (bot, message, args) => {
 	await message.delete();
 
-	// if (!xp[message.author.id]) {
-	// 	xp[message.author.id] = {
-	// 		xp: 0,
-	// 		level: 1
-	// 	};
-	// }
-
-	// let curxp = xp[message.author.id].xp;
-	// let curlvl = xp[message.author.id].level;
-	// let nxtLvlXp = curlvl * 300;
-	// let difference = nxtLvlXp - curxp;
-
-	// let lvlEmbed = new Discord.RichEmbed()
-	// 	.setAuthor(message.author.username)
-	// 	.setColor(botconfig.doggo)
-	// 	.addField("Level", curlvl, true)
-	// 	.addField("XP", curxp, true)
-	// 	.setFooter(`${difference} XP til level up`, message.author.displayAvatarURL);
-
-	// message.delete();
-	// message.channel.send(lvlEmbed).then(msg => { msg.delete(10000) });
-
 	xpMongoose.findOne({
 		userID: message.author.id,
 		serverID: message.guild.id
