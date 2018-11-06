@@ -129,7 +129,7 @@ module.exports.run = async (bot, message, args) => {
         const aboutfilter = (reaction, user) => reaction.emoji.name === '👌' && user.id === message.author.id;
         const about = msg.createReactionCollector(aboutfilter, { time: 10000000 });
 
-        about.on('collect', client5 => {
+        about.on('collect', client4 => {
             fs.readdir("./commands/", (err, files) => {
                 if (err) console.log(err);
                 let jsfile = files.filter(f => f.split(".").pop() === "js");

@@ -1,6 +1,6 @@
 const Discord = require("discord.js"),
     google = require("google");
-const config = require("../botconfig.json")
+const config = require("../botconfig.json");
 
 module.exports.run = async (bot, message, args) => {
     google.resultsPerPage = 1
@@ -19,14 +19,15 @@ module.exports.run = async (bot, message, args) => {
                 return void (0)
             }
             const gEmbed = new Discord.RichEmbed()
-                .setAuthor(`Google search result for ${args}`.split(',').join(' '))
+                .setAuthor(`${message.author.username}`, message.author.displayAvatarURL)
+                .setFooter(`Google search result for ${args}`.split(',').join(' '))
                 .setColor(config.doggo)
                 .setThumbnail('http://www.stickpng.com/assets/images/5847f9cbcef1014c0b5e48c8.png')
                 .addField('Website', link.title)
                 .addField('Description', link.description)
                 .addField('URL', link.href);
 
-            message.channel.send(gEmbed);
+            message.channel.send(gEmbed).then(msg => { msg.delete(20000) });
         }
 
         if (nextCounter < 1) {
@@ -35,6 +36,8 @@ module.exports.run = async (bot, message, args) => {
         }
 
     });
+
+    await message.delete();
 }
 
 module.exports.help = {
