@@ -215,7 +215,6 @@ bot.on("message", async message => {
 
 				newXP.save().catch(err => console.log(err));
 			} else {
-				let curxp = xp.xp;
 				let curlvl = xp.level;
 				let nxtLvl = xp.level * 300;
 
