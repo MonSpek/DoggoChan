@@ -8,7 +8,8 @@ const botconfig = require("./botconfig.json"),
 	bList = require("./assets/blacklist.json"),
 	errors = require("./utils/errors.js"),
 	xpMongoose = require("./models/xp.js"),
-	Money = require("./models/money.js");
+	Money = require("./models/money.js"),
+	banMongoose = require("./models/banned.js");
 
 mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 	useNewUrlParser: true
@@ -39,6 +40,47 @@ bot.on("ready", () => {
 		const activity = activities[Math.floor(Math.random() * activities.length)];
 		bot.user.setActivity(activity.text, { type: activity.type });
 	}, 60000);
+});
+
+bot.on('guildBanAdd', (guild, user) => {
+	var d = Date.now()
+
+	//!Removes banned user from database
+	Money.findOneAndDelete({
+		userID: user.id,
+		serverID: guild.id
+	}, (err, res) => {
+		if (err) console.log(err)
+		console.log(`${user.id} has been banned from ${guild} and thus has been removed from the database`)
+	});
+
+	xpMongoose.findOneAndDelete({
+		userID: user.id,
+		serverID: guild.id
+	}, (err, res) => {
+		if (err) console.log(err)
+		console.log(`${user.id} has been banned from ${guild} and thus has been removed from the database`)
+	});
+
+	banMongoose.findOne({
+		serverID: guild.id
+	}, (err, ban) => {
+		if (err) console.log(err);
+
+		if(!ban) {
+			const newBan = new banMongoose({
+				userID: user.id,
+				userName: user.username,
+				serverID: guild.id,
+				date: d.toString(),
+				reason: "none"
+			})
+
+			newBan.save().catch(err => console.log(err));
+		} else {
+			return;
+		}
+	})
 });
 
 bot.on('guildMemberAdd', member => {
@@ -76,7 +118,15 @@ bot.on('guildMemberRemove', member => {
 		serverID: member.guild.id
 	}, (err, res) => {
 		if (err) console.log(err)
-		console.log(`${member.id} left a server and thus has been removed from the database`)
+		console.log(`${member.id} left ${member.guild} and thus has been removed from the database`)
+	});
+
+	xpMongoose.findOneAndDelete({
+		userID: member.id,
+		serverID: member.guild.id
+	}, (err, res) => {
+		if (err) console.log(err)
+		console.log(`${member.id} left ${member.guild} and thus has been removed from the database`)
 	});
 
 	//!only works on my personal or doggos's server
@@ -121,7 +171,7 @@ bot.on("messageUpdate", async message => {
 				.setColor(botconfig.doggo)
 				.addField(`${message.author} Eddited A Post:`, `${message.content} ()`)
 				.addField("**Date**:", `${d.toString()}`);
-			
+
 			logChl.send(logEmbed);
 		}
 	}
@@ -191,7 +241,7 @@ bot.on("message", async message => {
 					money.money = money.money + coinstoadd;
 
 					money.save().catch(err => console.log(err));
-					
+
 					message.channel.send(moneyEmbed).then(msg => { msg.delete(5000) });
 				}
 			})
@@ -203,7 +253,7 @@ bot.on("message", async message => {
 			userID: message.author.id,
 			serverID: message.guild.id
 		}, (err, xp) => {
-			if(err) console.log(err);
+			if (err) console.log(err);
 
 			if (!xp) {
 				const newXP = new xpMongoose({
