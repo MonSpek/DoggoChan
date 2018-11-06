@@ -10,9 +10,6 @@ const botconfig = require("./botconfig.json"),
 	xpMongoose = require("./models/xp.js"),
 	Money = require("./models/money.js");
 
-let cooldown = new Set();
-let cdseconds = 5;
-
 mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 	useNewUrlParser: true
 });
@@ -140,7 +137,7 @@ bot.on("message", async message => {
 
 	//!for my server only
 	if (message.guild.id === "498112893330391041") {
-		if (message.author.id !== "264187153318281216") {
+		if (!message.member.hasPermission("ADMINISTRATOR")) {
 			let wordfound = false;
 			for (var i in bList.words) {
 				if (message.content.toLowerCase().includes(bList.words[i].toLowerCase())) wordfound = true;
