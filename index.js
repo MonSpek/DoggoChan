@@ -1,6 +1,8 @@
 const Discord = require("discord.js"),
 	fs = require("fs"),
-	mongoose = require("mongoose");
+	mongoose = require("mongoose"),
+	Canvas = require("canvas"),
+	snekfetch = require("snekfetch");
 const bot = new Discord.Client({ disableEveryone: false });
 bot.commands = new Discord.Collection();
 const botconfig = require("./botconfig.json"),
@@ -83,32 +85,67 @@ bot.on('guildBanAdd', (guild, user) => {
 	})
 });
 
-bot.on('guildMemberAdd', member => {
-	//!only works on my personal server or friend's server
-	if (member.guild.id === "498112893330391041" || member.guild.id === "448578730151903263") {
-		let msgChl = member.guild.channels.find(`name`, "main-chat");
-		if (!msgChl) return console.log("New member error");
+//* Pass the entire Canvas object
+const applyText = (canvas, text) => {
+	const ctx = canvas.getContext('2d');
 
-		let logChl = member.guild.channels.find(`name`, "logs");
-		if (!logChl) return console.log("log error");
+	//* Font size
+	let fontSize = 70;
 
-		let newMemEmbed = new Discord.RichEmbed()
-			.setDescription("Welcome")
-			.setColor(botconfig.doggo)
-			.setThumbnail(member.guild.iconURL)
-			.addField(`Welcome to ${member.guild.name}!`, `Hello, ${member} you are the ${member.guild.memberCount}th member`);
+	do {
+		//* Sets the font
+		ctx.font = `${fontSize -= 10}px sans-serif`;
+	} while (ctx.measureText(text).width > canvas.width - 300); 
 
-		let logEmbed = new Discord.RichEmbed()
-			.setDescription("New Member")
-			.setColor(botconfig.doggo)
-			.setThumbnail(member.guild.iconURL)
-			.addField("Member Joined", `${member} has joined ${member.guild.name} and is the ${member.guild.memberCount}th member`)
-			.addField("**User's ID**:", `${member.id}`)
-			.addField("**Joined On**:", `${member.joinedAt}`);
+	return ctx.font;
+};
 
-		msgChl.send(newMemEmbed).then(msg => msg.delete(3600000)); //!Deletes after 1 hour
-		logChl.send(logEmbed); //logs
-	}
+bot.on('guildMemberAdd', async member => {
+	//* Finds channel
+	const channel = member.guild.channels.find(ch => ch.name === 'member-log');
+	if (!channel) return;
+
+	//* Makes canvas
+	const canvas = Canvas.createCanvas(700, 250);
+	const ctx = canvas.getContext('2d');
+
+	//* Adds background
+	const background = await Canvas.loadImage("./assets/snow.jpg");
+	ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+	//* Adds border
+	ctx.strokeStyle = '#143ebc';
+	ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+	//* Adds text to the top
+	ctx.font = '28px sans-serif';
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText('Welcome to the server,', canvas.width / 2.5, canvas.height / 3.5);
+
+
+	//* Adds text
+	ctx.font = applyText(canvas, `${member.displayName}!`); //* assigns font
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText(`${member.displayName}!`, canvas.width / 2.5, canvas.height / 1.8);
+
+	//* Makes avatar circuliar
+	ctx.beginPath();
+	ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
+	ctx.closePath();
+	ctx.clip();
+	ctx.strokeStyle = '#000000';
+	ctx.stroke();
+
+	//* Adds avatar
+	const { body: buffer } = await snekfetch.get(member.user.displayAvatarURL);
+	const avatar = await Canvas.loadImage(buffer);
+	ctx.drawImage(avatar, 25, 25, 200, 200);
+
+	//* Adds image
+	const attachment = new Discord.Attachment(canvas.toBuffer(), 'welcome-image.png')
+
+	//* Sends image
+	channel.send(`Welcome to the server, ${member}!`, attachment);
 });
 
 bot.on('guildMemberRemove', member => {
@@ -153,7 +190,7 @@ bot.on('guildMemberRemove', member => {
 			.addField("**Joined On**:", `${member.joinedAt}`)
 			.addField("**Left At**:", `${d.toString()}`);
 
-		msgChl.send(leftMemEmbed).then(msg => msg.delete(120000)); //!Delets after 2 minutes
+		msgChl.send(leftMemEmbed);
 		logChl.send(logEmbed);
 	}
 });

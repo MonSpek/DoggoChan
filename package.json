@@ -11,6 +11,7 @@
   "dependencies": {
     "array-sort": "^1.0.0",
     "ascii-art": "^1.5.0",
+    "canvas": "^2.0.1",
     "discord-anti-spam": "^1.1.2",
     "discord.js": "^11.4.2",
     "mathjs": "^5.2.3",
@@ -19,6 +20,7 @@
     "node-superfetch": "^0.1.9",
     "quick.hook": "^1.4.2",
     "relevant-urban": "^2.0.0",
+    "snekfetch": "^4.0.4",
     "superagent": "^4.0.0-beta.5",
     "table": "^5.1.0"
   }
