@@ -53,6 +53,6 @@ module.exports.run = async (bot, message, args) => {
 
 module.exports.help = {
     name: "leader",
-    roles: "normal",
+    roles: "about",
     description: "Gives a coin leaderboard"
 }
