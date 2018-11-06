@@ -52,16 +52,16 @@ bot.on('guildBanAdd', (guild, user) => {
 		userID: user.id,
 		serverID: guild.id
 	}, (err, res) => {
-		if (err) console.log(err)
-		console.log(`${user.id} has been banned from ${guild} and thus has been removed from the database`)
+		if (err) console.log(err);
+		console.log(`${user.id} has been banned from ${guild} and thus has been removed from the database`);
 	});
 
 	xpMongoose.findOneAndDelete({
 		userID: user.id,
 		serverID: guild.id
 	}, (err, res) => {
-		if (err) console.log(err)
-		console.log(`${user.id} has been banned from ${guild} and thus has been removed from the database`)
+		if (err) console.log(err);
+		console.log(`${user.id} has been banned from ${guild} and thus has been removed from the database`);
 	});
 
 	banMongoose.findOne({
@@ -101,6 +101,41 @@ const applyText = (canvas, text) => {
 };
 
 bot.on('guildMemberAdd', async member => {
+	Money.findOne({
+		userID: member.id,
+		serverID: member.guild.id
+	}, (err, money) => {
+		if (err) console.log(err);
+
+		if (!money) {
+			const newMoney = new Money({
+				userID: member.id,
+				serverID: member.guild.id,
+				money: 0
+			})
+
+			newMoney.save().catch(err => console.log(err));
+		}
+	})
+
+	xpMongoose.findOne({
+		userID: member.id,
+		serverID: member.guild.id
+	}, (err, xp) => {
+		if (err) console.log (err);
+
+		if (!xp) {
+			const newXP = new xpMongoose({
+				userID: member.id,
+				serverID: member.guild.id,
+				xp: 0,
+				level: 1
+			})
+
+			newXP.save().catch(err => console.log(err));
+		}
+	})
+
 	//* Finds channel
 	const channel = member.guild.channels.find(ch => ch.name === 'member-log');
 	if (!channel) return;
