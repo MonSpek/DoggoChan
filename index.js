@@ -10,12 +10,16 @@ const botconfig = require("./botconfig.json"),
 	xpMongoose = require("./models/xp.js"),
 	Money = require("./models/money.js");
 
+let cooldown = new Set();
+let cdseconds = 5;
+
 mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 	useNewUrlParser: true
 });
 
 //TODO: 1) figure out more things to do with mongoose
 //TODO: 2) add the word filter to editted messages
+//TODO: 3) add cooldown to users
 
 fs.readdir("./commands/", (err, files) => {
 	if (err) console.log(err);
@@ -135,8 +139,8 @@ bot.on("message", async message => {
 	}
 
 	//!for my server only
-	if (message.guild.id !== "498112893330391041") {
-		if (message.author.id === "500018898935218197") {
+	if (message.guild.id === "498112893330391041") {
+		if (message.author.id !== "264187153318281216") {
 			let wordfound = false;
 			for (var i in bList.words) {
 				if (message.content.toLowerCase().includes(bList.words[i].toLowerCase())) wordfound = true;
@@ -160,6 +164,8 @@ bot.on("message", async message => {
 		let commandfile = bot.commands.get(cmd.slice(prefix.length));
 		if (commandfile) commandfile.run(bot, message, args);
 	} else if (!message.author.bot && message.channel.type !== "dm") {
+
+
 		let coinstoadd = Math.floor(Math.random() * 50) + 1;
 		let coinsneeded = Math.floor(Math.random() * 50) + 1;
 		if (coinstoadd == coinsneeded) {
