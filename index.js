@@ -203,10 +203,10 @@ bot.on('guildMemberRemove', member => {
 
 	//!only works on my personal or doggos's server
 	if (member.guild.id === "498112893330391041" || member.guild.id === "448578730151903263") {
-		let msgChl = member.guild.channels.find(`name`, "main-chat");
+		let msgChl = member.guild.channels.find(ch => ch.name === 'member-log');;
 		if (!msgChl) return console.log("New member error");
 
-		let logChl = member.guild.channels.find(`name`, "logs");
+		let logChl = member.guild.channels.find(ch => ch.name === 'logs');
 		if (!logChl) return console.log("log error");
 
 		let leftMemEmbed = new Discord.RichEmbed()
@@ -234,7 +234,7 @@ bot.on("messageUpdate", async message => {
 	//!for my server only
 	if (message.guild.id === "498112893330391041") {
 		if (!message.author.bot) {
-			let logChl = message.guild.channels.find(`name`, "logs");
+			let logChl = message.guild.channels.find(ch => ch.name === 'logs');
 			if (!logChl) return console.log("log error");
 
 			var d = new Date();

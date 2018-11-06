@@ -28,7 +28,7 @@ module.exports.run = async (bot, message, args) => {
 		.setDescription(`${rUser} has been reported by ${message.author}`)
 		.setColor(botconfig.red);
 	
-	let reportschannel = message.guild.channels.find(`name`, "reports");
+	let reportschannel = message.guild.channels.find(ch => ch.name === 'reports');
 	if (!reportschannel) return message.channel.send("Couldn't find reports channel.");
 
 	const report = new Reports({

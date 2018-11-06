@@ -20,6 +20,7 @@
     "node-superfetch": "^0.1.9",
     "quick.hook": "^1.4.2",
     "relevant-urban": "^2.0.0",
+    "request": "^2.88.0",
     "snekfetch": "^4.0.4",
     "superagent": "^4.0.0-beta.5",
     "table": "^5.1.0"
