@@ -14,6 +14,6 @@ module.exports.run = async (bot, message, args, ops) => {
 
 module.exports.help = {
     name: "ascii",
-    role: "normal",
+    role: "fun",
 	description: "Turn text into ascii"
 }

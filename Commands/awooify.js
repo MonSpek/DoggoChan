@@ -33,6 +33,6 @@ module.exports.run = async (bot, message, args) => {
 
 module.exports.help = {
     name: "awooify",
-    role: "normal",
+    role: "fun",
     description: "awootify your pfp"
 }

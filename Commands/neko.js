@@ -20,6 +20,6 @@ module.exports.run = async (bot, message, args) => {
 
 module.exports.help = {
     name: "neko",
-    role: "normal",
+    role: "fun",
     description: "Posts a cute neko"
 }

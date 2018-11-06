@@ -42,6 +42,6 @@ module.exports.run = async (bot, message, args) => {
 
 module.exports.help = {
 	name: "commands",
-	role: "normal",
+	role: "hidden",
 	description: "Lists commands."
 }

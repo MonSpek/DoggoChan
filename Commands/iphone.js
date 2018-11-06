@@ -33,6 +33,6 @@ module.exports.run = async (bot, message, args) => {
 
 module.exports.help = {
     name: "iphone",
-    role: "normal",
+    role: "fun",
     description: "Puts a picture on an iPhone screen"
 }

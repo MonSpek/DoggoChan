@@ -26,6 +26,6 @@ module.exports.run = async (bot, message, args, tools) => {
 }
 module.exports.help = {
     name: "udic",
-    role: "normal", 
+    role: "fun", 
     description: "Looks something up on Urban Dictionary"
 }

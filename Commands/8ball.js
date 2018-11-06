@@ -21,6 +21,6 @@ module.exports.run = async (bot, message, args) => {
 
 module.exports.help = {
 	name: "8ball",
-	role: "normal",
+	role: "fun",
 	description: "Ask me any question"
 }
