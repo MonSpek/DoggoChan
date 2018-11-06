@@ -7,6 +7,7 @@ const botconfig = require("./botconfig.json"),
 	activities = require("./assets/activity.json"),
 	bList = require("./assets/blacklist.json"),
 	errors = require("./utils/errors.js"),
+	xpMongoose = require("./models/xp.js"),
 	Money = require("./models/money.js");
 let xp = require("./xp.json");
 
@@ -194,31 +195,72 @@ bot.on("message", async message => {
 			})
 		}
 
+
+		//!Old code
 		let xpAdd = Math.floor(Math.random() * 7) + 8;
 
-		if (!xp[message.author.id]) {
-			xp[message.author.id] = {
-				xp: 0,
-				level: 1
-			};
-		}
+		xpMongoose.findOne({
+			userID: message.author.id,
+			serverID: message.guild.id
+		}, (err, xp) => {
+			if(err) console.log(err);
 
-		let curxp = xp[message.author.id].xp;
-		let curlvl = xp[message.author.id].level;
-		let nxtLvl = xp[message.author.id].level * 300;
-		xp[message.author.id].xp = curxp + xpAdd;
-		if (nxtLvl <= xp[message.author.id].xp) {
-			xp[message.author.id].level = curlvl + 1;
-			let lvlup = new Discord.RichEmbed()
-				.setTitle("Level Up!")
-				.setColor(botconfig.doggo)
-				.addField("New Level", curlvl + 1);
+			if (!xp) {
+				const newXP = new xpMongoose({
+					userID: message.author.id,
+					serverID: message.guild.id,
+					xp: xpAdd,
+					level: 1
+				})
 
-			message.channel.send(lvlup).then(msg => { msg.delete(5000) });
-		}
-		fs.writeFile("./xp.json", JSON.stringify(xp), (err) => {
-			if (err) console.log(err)
-		});
+				newXP.save().catch(err => console.log(err));
+			} else {
+				let curxp = xp.xp;
+				let curlvl = xp.level;
+				let nxtLvl = xp.level * 300;
+
+				xp.xp = xp.xp + xpAdd;
+
+				if (nxtLvl <= xp.xp) {
+					xp.level = curlvl + 1;
+
+					let lvlup = new Discord.RichEmbed()
+						.setTitle("Level Up!")
+						.setColor(botconfig.doggo)
+						.addField("New Level", curlvl + 1);
+
+					message.channel.send(lvlup).then(msg => { msg.delete(5000) });
+				}
+
+				xp.save().catch(err => console.log(err));
+			}
+		})
+
+		// if (!xp[message.author.id]) {
+		// 	xp[message.author.id] = {
+		// 		xp: 0,
+		// 		level: 1
+		// 	};
+		// }
+
+		// let curxp = xp[message.author.id].xp;
+		// let curlvl = xp[message.author.id].level;
+		// let nxtLvl = xp[message.author.id].level * 300;
+		// xp[message.author.id].xp = curxp + xpAdd;
+		// if (nxtLvl <= xp[message.author.id].xp) {
+		// 	xp[message.author.id].level = curlvl + 1;
+			// let lvlup = new Discord.RichEmbed()
+			// 	.setTitle("Level Up!")
+			// 	.setColor(botconfig.doggo)
+			// 	.addField("New Level", curlvl + 1);
+
+		// 	message.channel.send(lvlup).then(msg => { msg.delete(5000) });
+		// }
+		// fs.writeFile("./xp.json", JSON.stringify(xp), (err) => {
+		// 	if (err) console.log(err)
+		// });
+
+
 	}
 
 });
