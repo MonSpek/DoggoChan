@@ -14,6 +14,7 @@
     "canvas": "^2.0.1",
     "discord-anti-spam": "^1.1.2",
     "discord.js": "^11.4.2",
+    "google": "^2.1.0",
     "mathjs": "^5.2.3",
     "mongoose": "^5.3.9",
     "ms": "^2.1.1",
