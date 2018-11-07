@@ -20,7 +20,7 @@
     "mongoose": "^5.3.9",
     "ms": "^2.1.1",
     "node-superfetch": "^0.1.9",
-    "quick.hook": "^1.4.2",
+    "quick.hook": "^1.5.1",
     "relevant-urban": "^2.0.0",
     "request": "^2.88.0",
     "snekfetch": "^4.0.4",

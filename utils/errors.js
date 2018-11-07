@@ -112,3 +112,12 @@ module.exports.noApiText = (message) => {
 
     message.channel.send(embed).then(m => m.delete(5000));
 }
+
+module.exports.notNsfwChl = (message) => {
+    let embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("You can use this command only on nsfw channels!")
+        .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}

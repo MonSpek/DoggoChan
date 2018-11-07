@@ -44,6 +44,12 @@ bot.on("ready", () => {
 	}, 60000);
 });
 
+bot.on('guildCreate', (guild, user) => {
+	guild.createChannel("logs");
+	guild.createChannel("reports");
+	guild.createChannel("member-log");
+});
+
 bot.on('guildBanAdd', (guild, user) => {
 	var d = Date.now()
 
