@@ -21,5 +21,5 @@ module.exports.run = async (bot, message, args) => {
 module.exports.help = {
     name: "lewd",
     role: "nsfw",
-    description: "Lists commands."
+    description: "Gives a lewd picture."
 }
