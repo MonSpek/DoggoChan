@@ -20,6 +20,7 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 //TODO: 1) figure out more things to do with mongoose
 //TODO: 2) add the word filter to editted messages
 //TODO: 3) add cooldown to users
+//TODO: 4) add left server message
 
 fs.readdir("./commands/", (err, files) => {
 	if (err) console.log(err);
