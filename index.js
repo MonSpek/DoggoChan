@@ -20,7 +20,6 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 //TODO: 1) figure out more things to do with mongoose
 //TODO: 2) add the word filter to editted messages
 //TODO: 3) add cooldown to users
-//TODO: 4) add left server message
 
 fs.readdir("./commands/", (err, files) => {
 	if (err) console.log(err);
@@ -208,7 +207,7 @@ bot.on('guildMemberAdd', async member => {
 	channel.send(`Welcome to the server, ${member}!`, attachment);
 });
 
-bot.on('guildMemberRemove', member => {
+bot.on('guildMemberRemove', async member => {
 	//! Removes left use from database
 	Money.findOneAndDelete({
 		userID: member.id,
@@ -226,33 +225,55 @@ bot.on('guildMemberRemove', member => {
 		console.log(`${member.id} left ${member.guild} and thus has been removed from the database`)
 	});
 
-	//!only works on my personal or doggos's server
-	if (member.guild.id === "498112893330391041" || member.guild.id === "448578730151903263") {
-		let msgChl = member.guild.channels.find(ch => ch.name === 'member-log');;
-		if (!msgChl) return console.log("New member error");
-
-		let logChl = member.guild.channels.find(ch => ch.name === 'logs');
-		if (!logChl) return console.log("log error");
-
-		let leftMemEmbed = new Discord.RichEmbed()
-			.setDescription("User Left")
-			.setColor(botconfig.doggo)
-			.setThumbnail(member.guild.iconURL)
-			.addField("A User Has Left The Server", `${member} has left ${member.guild.name}, there are  now ${member.guild.memberCount} members.`);
-
-		var d = new Date();
-		let logEmbed = new Discord.RichEmbed()
-			.setDescription("User Left")
-			.setColor(botconfig.doggo)
-			.setThumbnail(member.guild.iconURL)
-			.addField("Member Left", `${member} has left ${member.guild.name} and there are ${member.guild.memberCount} members left`)
-			.addField("**User's ID**:", `${member.id}`)
-			.addField("**Joined On**:", `${member.joinedAt}`)
-			.addField("**Left At**:", `${d.toString()}`);
-
-		msgChl.send(leftMemEmbed);
-		logChl.send(logEmbed);
-	}
+		//* Finds channel
+		const channel = member.guild.channels.find(ch => ch.name === 'member-log');
+		if (!channel) return;
+	
+		//* Makes canvas
+		const canvas = Canvas.createCanvas(700, 250);
+		const ctx = canvas.getContext('2d');
+	
+		//* Adds background
+		const background = await Canvas.loadImage("./assets/snow.jpg");
+		ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+	
+		//* Adds border
+		ctx.strokeStyle = '#143ebc';
+		ctx.strokeRect(0, 0, canvas.width, canvas.height);
+	
+		//* Adds text to the top
+		ctx.font = '26px sans-serif';
+		ctx.fillStyle = '#ffffff';
+		ctx.fillText('This user has left the server,', canvas.width / 2.5, canvas.height / 3.5);
+	
+	
+		//* Adds text
+		ctx.font = applyText(canvas, `${member.displayName}.`); //* assigns font
+		ctx.fillStyle = '#ffffff';
+		ctx.fillText(`${member.displayName}.`, canvas.width / 2.5, canvas.height / 1.8);
+	
+		ctx.font = applyText2(canvas, `There are ${member.guild.memberCount} left.`); //* assigns font
+		ctx.fillStyle = '#ffffff';
+		ctx.fillText(`There are ${member.guild.memberCount} left.`, canvas.width / 2.5, canvas.height / 1.3);
+	
+		//* Makes avatar circuliar
+		ctx.beginPath();
+		ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
+		ctx.closePath();
+		ctx.clip();
+		ctx.strokeStyle = '#000000';
+		ctx.stroke();
+	
+		//* Adds avatar
+		const { body: buffer } = await snekfetch.get(member.user.displayAvatarURL);
+		const avatar = await Canvas.loadImage(buffer);
+		ctx.drawImage(avatar, 25, 25, 200, 200);
+	
+		//* Adds image
+		const attachment = new Discord.Attachment(canvas.toBuffer(), 'welcome-image.png')
+	
+		//* Sends image
+		channel.send(`${member} has left the server!`, attachment);
 });
 
 bot.on("messageUpdate", async message => {
