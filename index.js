@@ -44,7 +44,7 @@ bot.on("ready", () => {
 	}, 60000);
 });
 
-bot.on('guildCreate', (guild, user) => {
+bot.on('guildCreate', (guild) => {
 	guild.createChannel("logs");
 	guild.createChannel("reports");
 	guild.createChannel("member-log");

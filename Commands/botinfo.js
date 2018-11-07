@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const botconfig = require("../botconfig.json")
 
 module.exports.run = async (bot, message, args) => {
 	let bicon = bot.user.displayAvatarURL;
@@ -9,6 +10,7 @@ module.exports.run = async (bot, message, args) => {
 		.addField("Bot Name", bot.user.username)
 		.addField("Created On", bot.user.createdAt)
 		.addField("Created by", "Butch la Bully")
+		.addField("Servers", `${bot.guilds.size}`)
 		.addField("Github Repo", "https://github.com/MonSpek/DoggoChan");
 
 	message.channel.send(botembed);
@@ -17,5 +19,5 @@ module.exports.run = async (bot, message, args) => {
 module.exports.help = {
 	name: "botinfo",
 	role: "about",
-	description: "Gives info on the bot."
+	description: "Gives info about me!"
 }
