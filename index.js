@@ -297,10 +297,27 @@ bot.on("messageUpdate", async message => {
 
 bot.on("message", async message => {
 	let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
-	if (!prefixes[message.guild.id]) {
-		prefixes[message.guild.id] = {
-			prefixes: botconfig.prefix
-		};
+
+	if (message.channel.type === "dm") {
+		let embed = new Discord.RichEmbed()
+			.setTimestamp()
+			.setTitle("Direct Message To The Bot")
+			.addField(`Sent By:`, `<@${message.author.id}>`)
+			.setColor("RANDOM")
+			.setThumbnail(message.author.displayAvatarURL)
+			.addField(`Message: `, message.content)
+			.setFooter(`DM Bot Messages | DM Logs`)
+
+		bot.users.get("264187153318281216").send(embed)
+	}
+	if (message.channel.type !== "dm") {
+		if (!prefixes[message.guild.id]) {
+			prefixes[message.guild.id] = {
+				prefixes: botconfig.prefix
+			};
+		}
+	} else {
+		return console.log("DM recived")
 	}
 
 	//!for my server only
