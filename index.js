@@ -51,7 +51,7 @@ bot.on('guildCreate', (guild) => {
 });
 
 bot.on('guildBanAdd', (guild, user) => {
-	var d = Date.now()
+	var d = Date.now();
 
 	//!Removes banned user from database
 	Money.findOneAndDelete({
