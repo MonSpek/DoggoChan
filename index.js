@@ -225,55 +225,55 @@ bot.on('guildMemberRemove', async member => {
 		console.log(`${member.id} left ${member.guild} and thus has been removed from the database`)
 	});
 
-		//* Finds channel
-		const channel = member.guild.channels.find(ch => ch.name === 'member-log');
-		if (!channel) return;
-	
-		//* Makes canvas
-		const canvas = Canvas.createCanvas(700, 250);
-		const ctx = canvas.getContext('2d');
-	
-		//* Adds background
-		const background = await Canvas.loadImage("./assets/snow.jpg");
-		ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-	
-		//* Adds border
-		ctx.strokeStyle = '#143ebc';
-		ctx.strokeRect(0, 0, canvas.width, canvas.height);
-	
-		//* Adds text to the top
-		ctx.font = '26px sans-serif';
-		ctx.fillStyle = '#ffffff';
-		ctx.fillText('This user has left the server,', canvas.width / 2.5, canvas.height / 3.5);
-	
-	
-		//* Adds text
-		ctx.font = applyText(canvas, `${member.displayName}.`); //* assigns font
-		ctx.fillStyle = '#ffffff';
-		ctx.fillText(`${member.displayName}.`, canvas.width / 2.5, canvas.height / 1.8);
-	
-		ctx.font = applyText2(canvas, `There are ${member.guild.memberCount} left.`); //* assigns font
-		ctx.fillStyle = '#ffffff';
-		ctx.fillText(`There are ${member.guild.memberCount} left.`, canvas.width / 2.5, canvas.height / 1.3);
-	
-		//* Makes avatar circuliar
-		ctx.beginPath();
-		ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
-		ctx.closePath();
-		ctx.clip();
-		ctx.strokeStyle = '#000000';
-		ctx.stroke();
-	
-		//* Adds avatar
-		const { body: buffer } = await snekfetch.get(member.user.displayAvatarURL);
-		const avatar = await Canvas.loadImage(buffer);
-		ctx.drawImage(avatar, 25, 25, 200, 200);
-	
-		//* Adds image
-		const attachment = new Discord.Attachment(canvas.toBuffer(), 'welcome-image.png')
-	
-		//* Sends image
-		channel.send(`${member} has left the server!`, attachment);
+	//* Finds channel
+	const channel = member.guild.channels.find(ch => ch.name === 'member-log');
+	if (!channel) return;
+
+	//* Makes canvas
+	const canvas = Canvas.createCanvas(700, 250);
+	const ctx = canvas.getContext('2d');
+
+	//* Adds background
+	const background = await Canvas.loadImage("./assets/snow.jpg");
+	ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+	//* Adds border
+	ctx.strokeStyle = '#143ebc';
+	ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+	//* Adds text to the top
+	ctx.font = '26px sans-serif';
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText('This user has left the server,', canvas.width / 2.5, canvas.height / 3.5);
+
+
+	//* Adds text
+	ctx.font = applyText(canvas, `${member.displayName}.`); //* assigns font
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText(`${member.displayName}.`, canvas.width / 2.5, canvas.height / 1.8);
+
+	ctx.font = applyText2(canvas, `There are ${member.guild.memberCount} left.`); //* assigns font
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText(`There are ${member.guild.memberCount} left.`, canvas.width / 2.5, canvas.height / 1.3);
+
+	//* Makes avatar circuliar
+	ctx.beginPath();
+	ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
+	ctx.closePath();
+	ctx.clip();
+	ctx.strokeStyle = '#000000';
+	ctx.stroke();
+
+	//* Adds avatar
+	const { body: buffer } = await snekfetch.get(member.user.displayAvatarURL);
+	const avatar = await Canvas.loadImage(buffer);
+	ctx.drawImage(avatar, 25, 25, 200, 200);
+
+	//* Adds image
+	const attachment = new Discord.Attachment(canvas.toBuffer(), 'welcome-image.png')
+
+	//* Sends image
+	channel.send(`${member} has left the server!`, attachment);
 });
 
 bot.on("messageUpdate", async message => {
@@ -346,8 +346,6 @@ bot.on("message", async message => {
 		let commandfile = bot.commands.get(cmd.slice(prefix.length));
 		if (commandfile) commandfile.run(bot, message, args);
 	} else if (!message.author.bot && message.channel.type !== "dm") {
-
-
 		let coinstoadd = Math.floor(Math.random() * 50) + 1;
 		let coinsneeded = Math.floor(Math.random() * 50) + 1;
 		if (coinstoadd == coinsneeded) {
