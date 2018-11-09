@@ -15,7 +15,6 @@
     "cheerio": "^1.0.0-rc.2",
     "discord-anti-spam": "^1.1.2",
     "discord.js": "^11.4.2",
-    "google": "^2.1.0",
     "mal-scraper": "^2.4.5",
     "mathjs": "^5.2.3",
     "mongoose": "^5.3.9",
