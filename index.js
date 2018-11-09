@@ -317,7 +317,7 @@ bot.on("message", async message => {
 			};
 		}
 	} else {
-		return console.log("DM recived")
+		console.log("DM recived")
 	}
 
 	//!for my server only
