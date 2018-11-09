@@ -36,6 +36,36 @@ fs.readdir("./commands/", (err, files) => {
 	});
 });
 
+//! changes the canvas font to a level where it doesn't consume the entrire message
+const applyText = (canvas, text) => {
+	const ctx = canvas.getContext('2d');
+
+	//* Font size
+	let fontSize = 70;
+
+	do {
+		//* Sets the font
+		ctx.font = `${fontSize -= 10}px sans-serif`;
+	} while (ctx.measureText(text).width > canvas.width - 300);
+
+	return ctx.font;
+};
+
+//! For the member count
+const applyText2 = (canvas, text) => {
+	const ctx = canvas.getContext('2d');
+
+	//* Font size
+	let fontSize = 80;
+
+	do {
+		//* Sets the font
+		ctx.font = `${fontSize -= 10}px sans-serif`;
+	} while (ctx.measureText(text).width > canvas.width - 300);
+
+	return ctx.font;
+};
+
 bot.on("ready", () => {
 	console.log(`${bot.user.username} is online on ${bot.guilds.size} servers!`);
 	bot.setInterval(() => {
@@ -45,9 +75,9 @@ bot.on("ready", () => {
 });
 
 bot.on('guildCreate', (guild) => {
-	guild.createChannel("logs");
-	guild.createChannel("reports");
-	guild.createChannel("member-log");
+	guild.createChannel("logs", "text");
+	guild.createChannel("reports", "text");
+	guild.createChannel("member-log", "text");
 });
 
 bot.on('guildBanAdd', (guild, user) => {
@@ -90,35 +120,6 @@ bot.on('guildBanAdd', (guild, user) => {
 		}
 	})
 });
-
-//* Pass the entire Canvas object
-const applyText = (canvas, text) => {
-	const ctx = canvas.getContext('2d');
-
-	//* Font size
-	let fontSize = 70;
-
-	do {
-		//* Sets the font
-		ctx.font = `${fontSize -= 10}px sans-serif`;
-	} while (ctx.measureText(text).width > canvas.width - 300);
-
-	return ctx.font;
-};
-
-const applyText2 = (canvas, text) => {
-	const ctx = canvas.getContext('2d');
-
-	//* Font size
-	let fontSize = 80;
-
-	do {
-		//* Sets the font
-		ctx.font = `${fontSize -= 10}px sans-serif`;
-	} while (ctx.measureText(text).width > canvas.width - 300);
-
-	return ctx.font;
-};
 
 bot.on('guildMemberAdd', async member => {
 	Money.findOne({
