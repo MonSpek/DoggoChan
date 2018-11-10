@@ -17,10 +17,11 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 	useNewUrlParser: true
 });
 
+const recentCommands = new Set();
+
 //TODO: 1) figure out more things to do with mongoose
 //TODO: 2) add the word filter to editted messages
-//TODO: 3) add cooldown to users
-//TODO: 4) make things, such as word filter, optional in the mongod database
+//TODO: 3) make things, such as word filter, optional in the mongod database
 
 fs.readdir("./commands/", (err, files) => {
 	if (err) console.log(err);
@@ -344,7 +345,18 @@ bot.on("message", async message => {
 	let cmd = messageArray[0];
 	let args = messageArray.slice(1);
 
+	//* I have been self hosting so to keep the load down on my PC a 5 second cooldown is in place for commands
 	if (message.content.startsWith(prefix) && !message.author.bot && message.channel.type !== "dm") {
+		if (recentCommands.has(message.author.id)) {
+			return
+		} else {
+			recentCommands.add(message.author.id)
+
+			setTimeout(() => {
+				recentCommands.delete(message.author.id);
+			}, 5000);
+		}
+
 		let commandfile = bot.commands.get(cmd.slice(prefix.length));
 		if (commandfile) commandfile.run(bot, message, args);
 	} else if (!message.author.bot && message.channel.type !== "dm") {
