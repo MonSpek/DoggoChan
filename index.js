@@ -11,6 +11,7 @@ const botconfig = require("./botconfig.json"),
 	errors = require("./utils/errors.js"),
 	xpMongoose = require("./models/xp.js"),
 	Money = require("./models/money.js"),
+	Reports = require("./models/reports.js"),
 	banMongoose = require("./models/banned.js");
 
 mongoose.connect('mongodb://localhost:27017/DoggoChan', {
@@ -88,6 +89,34 @@ bot.on('guildCreate', (guild) => {
 	guild.createChannel("reports", "text");
 	guild.createChannel("member-log", "text");
 });
+
+bot.on('guildDelete', (guild) => {
+	console.log(`\n\n[Console] Left the Guild ${guild.name}.\nGuild Owner: ${guild.owner.user.tag}\nNumber of Members: ${guild.memberCount}\nGuild Location: ${guild.region}\n\n`);
+
+	Money.findByIdAndDelete({
+		serverID: guild.id
+	}, (err, res) => {
+		if (err) console.log(err);
+	});
+
+	xpMongoose.findByIdAndDelete({
+		serverID: guild.id
+	}, (err, res) => {
+		if (err) console.log(err);
+	});
+
+	banMongoose.findByIdAndDelete({
+		serverID: guild.id
+	}, (err, res) => {
+		if (err) console.log(err);
+	});
+
+	Reports.findByIdAndDelete({
+		serverID: guild.id
+	}, (err, res) => {
+		if (err) console.log(err);
+	});
+})
 
 bot.on('guildBanAdd', (guild, user) => {
 	var d = Date.now();
