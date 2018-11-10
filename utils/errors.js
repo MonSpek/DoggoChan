@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const fs = require("fs");
 const config = require("../botconfig.json")
 
 module.exports.noPerms = (message, perm) => {
@@ -117,6 +116,15 @@ module.exports.notNsfwChl = (message) => {
     let embed = new Discord.RichEmbed()
         .setTitle("Error")
         .setDescription("You can use this command only on nsfw channels!")
+        .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
+
+module.exports.noAnime = (message) => {
+    let embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("You did not give me an anime to look up!")
         .setColor(config.red)
 
     message.channel.send(embed).then(m => m.delete(5000));

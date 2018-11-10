@@ -1,9 +1,12 @@
 const Discord = require("discord.js"),
     malScraper = require("mal-scraper");
-const config = require("../botconfig.json");
+const config = require("../botconfig.json"),
+    errors = require("../utils/errors.js");
 
 module.exports.run = async (bot, message, args) => {
     const search = `${args}`;
+
+    if (!search) return errors.noAnime(message);
 
     malScraper.getInfoFromName(search)
         .then((data) => {
