@@ -129,3 +129,30 @@ module.exports.noAnime = (message) => {
 
     message.channel.send(embed).then(m => m.delete(5000));
 }
+
+module.exports.notInVC = (message) => {
+    let embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("You are not connected to a voice channel!")
+        .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
+
+module.exports.noMuURL = (message) => {
+    let embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("Please give me a URL!")
+        .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
+
+module.exports.invURL = (message) => {
+    let embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("Please input a **VALID** URL!")
+        .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
