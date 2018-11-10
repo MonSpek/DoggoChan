@@ -10,7 +10,7 @@ module.exports.run = async (bot, message, args) => {
             const malEmbed = new Discord.RichEmbed()
                 .setAuthor(`My Anime List search result for ${args}`.split(',').join(' '))
                 .setThumbnail(data.picture)
-                .setColor(config.doggo) 
+                .setColor(config.doggo)
                 .addField('English Title', data.englishTitle, true)
                 .addField('Japanese Title', data.japaneseTitle, true)
                 .addField('Type', data.type, true)
