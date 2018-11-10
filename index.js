@@ -18,7 +18,7 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 	useNewUrlParser: true
 });
 
-const recentCommands = new Set();
+const recentCommands = new Set(); //* Used for cooldown system
 
 //TODO: 1) figure out more things to do with mongoose
 //TODO: 2) add the word filter to editted messages
@@ -34,22 +34,6 @@ fs.readdir("./commands/", (err, files) => {
 
 	jsfile.forEach((f, i) => {
 		let props = require(`./commands/${f}`);
-		console.log(`${f} loaded!`);
-		bot.commands.set(props.help.name, props);
-	});
-});
-
-fs.readdir("./commands/music/", (err, files) => {
-	if (err) console.log(err);
-
-	let jsfile = files.filter(f => f.split(".").pop() === "js");
-	if (jsfile.length <= 0) {
-		console.log("Couldn't music find commands.");
-		return;
-	}
-
-	jsfile.forEach((f, i) => {
-		let props = require(`./commands/music/${f}`);
 		console.log(`${f} loaded!`);
 		bot.commands.set(props.help.name, props);
 	});
@@ -363,7 +347,7 @@ bot.on("message", async message => {
 			.addField(`Message: `, message.content)
 			.setFooter(`DM Bot Messages | DM Logs`)
 
-		bot.users.get("264187153318281216").send(embed)
+		bot.users.get("264187153318281216").send(embed);
 	}
 	if (message.channel.type !== "dm") {
 		if (!prefixes[message.guild.id]) {
