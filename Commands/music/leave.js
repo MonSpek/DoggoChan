@@ -4,18 +4,19 @@ const errors = require("../../utils/errors.js");
 module.exports.run = async (bot, message, args) => {
     var voiceChannel = message.member.voiceChannel;
 
-    if (!voiceChannel) return errors.notInVC(message);
-    if (!message.guild.me.voiceChannel) return errors.botNotInVC(message);
-    if (message.guild.me.voiceChannelID !== message.member.voiceChannelID) return errors.diffVC(message);
+    //* Checks
+    if (!voiceChannel) return errors.notInVC(message); //* Checks if user is in VC
+    if (!message.guild.me.voiceChannel) return errors.botNotInVC(message); //* Checks if bot is in VC
+    if (message.guild.me.voiceChannelID !== message.member.voiceChannelID) return errors.diffVC(message); //* Checks if user is in the same VC as the bot
 
     message.guild.me.voiceChannel.leave();
 
-    const playingEmbed = new Discord.RichEmbed()
+    const leaveEmbed = new Discord.RichEmbed()
         .setDescription("Leaving Channel...")
         .setFooter(`Done by ${message.author.username}`)
         .setColor('RANDOM')
 
-    message.channel.send(playingEmbed);
+    message.channel.send(leaveEmbed);
 }
 
 module.exports.help = {
