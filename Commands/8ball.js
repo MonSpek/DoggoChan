@@ -11,10 +11,10 @@ module.exports.run = async (bot, message, args) => {
 	let question = args.slice(0).join(" ");
 
 	let ballEmbed = new Discord.RichEmbed()
-	.setAuthor(message.author.tag)
-	.setColor(config.doggo)
-	.addField("Question", question)
-	.addField("Answer", replies[result]);
+		.setAuthor(message.author.tag)
+		.setColor(config.doggo)
+		.addField("Question", question)
+		.addField("Answer", replies[result]);
 
 	message.channel.send(ballEmbed);
 }
