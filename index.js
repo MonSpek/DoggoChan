@@ -82,6 +82,8 @@ bot.on("ready", () => {
 });
 
 bot.on('guildCreate', (guild) => {
+	console.log(`\n\n[Console] Joined the Guild ${guild.name}.\nGuild Owner: ${guild.owner.user.tag}\nNumber of Members: ${guild.memberCount}\nGuild Location: ${guild.region}\n\n`);
+
 	guild.createChannel("logs", "text");
 	guild.createChannel("reports", "text");
 	guild.createChannel("member-log", "text");
