@@ -10,14 +10,14 @@ module.exports.run = async (bot, message, args) => {
         .setColor(config.doggo)
         .setTitle('**Commands:**')
         .setThumbnail(message.author.avatarURL)
-        .setDescription('👮» Moderation.\n\n😂 » Fun.\n\n⛏ » Utilities.\n\n👌 » About.\n\n💦 » NSFW.\n\n')
+        .setDescription('👮» Moderation.\n\n😂 » Fun.\n\n⛏ » Utilities.\n\n💦 » NSFW.\n\n👌 » About.\n\n')
         .setImage('https://i.imgur.com/vXRfAd6.gif')
     await message.channel.send(embed1).then(async msg => {
         await msg.react('👮')
         await msg.react('😂')
         await msg.react('⛏')
-        await msg.react('👌')
         await msg.react('💦')
+        await msg.react('👌')
 
         const admfilter = (reaction, user) => reaction.emoji.name === '👮' && user.id === message.author.id;
         const adm = msg.createReactionCollector(admfilter, { time: 10000000 });
