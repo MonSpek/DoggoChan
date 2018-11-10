@@ -69,7 +69,12 @@ const applyText2 = (canvas, text) => {
 };
 
 bot.on("ready", () => {
-	console.log(`${bot.user.username} is online on ${bot.guilds.size} servers!`);
+	//* gives info on bot status
+	let pluralnonpluralservers = (bot.guilds.size > 1) ? 'Servers' : 'Server';
+	let pluralnonpluralusers = (bot.users.size > 1) ? 'Users' : 'User';
+
+	console.log(`\n\n${bot.user.username} is online.\nOperating on ${bot.guilds.size} ${pluralnonpluralservers}.\nOperating for ${bot.users.size} ${pluralnonpluralusers}.\n\n`);
+	//* randomly sets activity
 	bot.setInterval(() => {
 		const activity = activities[Math.floor(Math.random() * activities.length)];
 		bot.user.setActivity(activity.text, { type: activity.type });
@@ -397,9 +402,9 @@ bot.on("message", async message => {
 				userID: message.author.id,
 				serverID: message.guild.id
 			}, (err, money) => {
-				if(err) console.log(err);
+				if (err) console.log(err);
 
-				if(!money) {
+				if (!money) {
 					const newMoney = new Money({
 						userID: message.author.id,
 						serverID: message.guild.id,
