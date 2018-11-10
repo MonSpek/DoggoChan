@@ -392,6 +392,23 @@ bot.on("message", async message => {
 					message.channel.send(moneyEmbed).then(msg => { msg.delete(5000) });
 				}
 			})
+		} else {
+			Money.findOne({
+				userID: message.author.id,
+				serverID: message.guild.id
+			}, (err, money) => {
+				if(err) console.log(err);
+
+				if(!money) {
+					const newMoney = new Money({
+						userID: message.author.id,
+						serverID: message.guild.id,
+						money: 0
+					})
+
+					newMoney.save().catch(err => console.log(err));
+				}
+			})
 		}
 
 		let xpAdd = Math.floor(Math.random() * 7) + 8;
