@@ -26,6 +26,7 @@
     "quick.hook": "^1.5.1",
     "relevant-urban": "^2.0.0",
     "request": "^2.88.0",
+    "simple-youtube-api": "^5.1.1",
     "snekfetch": "^4.0.4",
     "superagent": "^4.0.0-beta.5",
     "table": "^5.1.0",

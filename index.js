@@ -2,8 +2,11 @@ const Discord = require("discord.js"),
 	fs = require("fs"),
 	mongoose = require("mongoose"),
 	Canvas = require("canvas"),
-	snekfetch = require("snekfetch");
+	snekfetch = require("snekfetch"),
+	ytdl = require("ytdl-core"),
+	YouTube = require('simple-youtube-api');
 const bot = new Discord.Client({ disableEveryone: false });
+const queue = new Map();
 bot.commands = new Discord.Collection();
 const botconfig = require("./botconfig.json"),
 	activities = require("./assets/activity.json"),
@@ -14,15 +17,206 @@ const botconfig = require("./botconfig.json"),
 	Reports = require("./models/reports.js"),
 	banMongoose = require("./models/banned.js");
 
+const youtube = new YouTube(botconfig.ytToken);
+
 mongoose.connect('mongodb://localhost:27017/DoggoChan', {
 	useNewUrlParser: true
 });
 
 const recentCommands = new Set(); //* Used for cooldown system
 
+var servers = {};
+
 //TODO: 1) figure out more things to do with mongoose
 //TODO: 2) add the word filter to editted messages
 //TODO: 3) make things, such as word filter, optional in the mongod database
+
+bot.on("message", async message => {
+	let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
+	let prefix = prefixes[message.guild.id].prefixes;
+
+	var args = message.content.substring(prefix.length).split(" ");
+	if (!message.content.startsWith(prefix)) return;
+	var searchString = args.slice(1).join(' ');
+	var url = args[1] ? args[1].replace(/<(.+)>/g, '$1') : '';
+	var serverQueue = queue.get(message.guild.id);
+
+	switch (args[0].toLowerCase()) {
+		case "play":
+			var voiceChannel = message.member.voiceChannel;
+			if (!voiceChannel) return message.channel.send('I\'m sorry but you need to be in a voice channel to play music!');
+
+			if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
+				var playlist = await youtube.getPlaylist(url);
+				var videos = await playlist.getVideos();
+				for (const video of Object.values(videos)) {
+					var video2 = await youtube.getVideoByID(video.id); // eslint-disable-line no-await-in-loop
+					await handleVideo(video2, message, voiceChannel, true); // eslint-disable-line no-await-in-loop
+				}
+
+				return message.channel.send(`<:humanos:497830454590963742>Playlist: **${playlist.title}** has been added to the queue!`);
+
+			} else {
+
+				try {
+					var video = await youtube.getVideo(url);
+				} catch (error) {
+					try {
+
+						var videos = await youtube.searchVideos(searchString, 10);
+						var index = 0;
+						// lista de seleção de musicas by hijazi
+						(message.channel.send(`<a:lupa:498337345737850881>**__Song selection:__**
+${videos.map(video2 => `<a:loader:498337340914401281>**${++index}**--***${video2.title}***`).join('\n')}\n <a:bolas:498337345188266016>**Please provide a value to select one of the search results ranging from 1-10.**`));
+						// editar a ultima mensagem amanha
+						try {
+							var response = await message.channel.awaitMessages(message2 => message2.content > 0 && message2.content < 11, {
+								maxMatches: 1,
+								time: 100000000,
+								errors: ['time']
+							});
+
+						} catch (err) {
+							console.error(err);
+							return message.channel.send('No or invalid value entered, cancelling video selection.');
+						}
+
+						var videoIndex = parseInt(response.first().content);
+						var video = await youtube.getVideoByID(videos[videoIndex - 1].id);
+
+					} catch (err) {
+						console.error(err);
+						return message.channel.send('🆘 I could not obtain any search results.');
+					}
+				}
+				return handleVideo(video, message, voiceChannel);
+			}
+		case "skip":
+			if (!message.member.voiceChannel) return message.channel.send('** )Oops! You are not in a voice channel!**');
+			if (!serverQueue) return message.channel.send('**There is nothing playing that I could skip for you.**');
+			serverQueue.connection.dispatcher.end('<:humanos:497830454590963742>**Skip command has been used!**');
+			return undefined;
+			break;
+
+
+		case "stop":
+			if (!message.member.voiceChannel) return message.channel.send('**You are not in a voice channel!**');
+			if (!serverQueue) return message.channel.send('**There is nothing playing that I could stop for you.**');
+			serverQueue.songs = [];
+			serverQueue.connection.dispatcher.end('**Stop command has been used!**');
+			return undefined;
+
+
+
+		case "vol":
+			if (!message.member.voiceChannel) return message.channel.send('__You are not in a voice channel!__');
+			if (!serverQueue) return message.channel.send('__There is nothing playing.__');
+			if (!args[1]) return message.channel.send(`**The current volume is:** ***${serverQueue.volume}***`);
+			serverQueue.volume = args[1];
+			serverQueue.connection.dispatcher.setVolumeLogarithmic(args[1] / 5);
+			return message.channel.send(`**I set the volume to:** **__${args[1]}__**`);
+
+		case "np":
+			if (!serverQueue) return message.channel.send('<:porra:497830754991210496>**There is nothing playing.**');
+			return message.channel.send(`<a:song:499288615340343317>***Now playing:*** **${serverQueue.songs[0].title}**`);
+
+		case "queue":
+			if (!serverQueue) return message.channel.send('<:porra:497830754991210496>**There is nothing playing.**');
+			return message.channel.send(`
+        **Song queue:${serverQueue.songs.map(song => `** >> ** ${song.title}`).join('\n')}
+        **Now playing: ${serverQueue.songs[0].title}**`);
+
+		case "pause":
+			if (serverQueue && serverQueue.playing) {
+				serverQueue.playing = false;
+				serverQueue.connection.dispatcher.pause();
+				return message.channel.send('⏸ Paused the music for you!');
+			}
+
+			return message.channel.send('There is nothing playing.');
+
+			break;
+
+		case "resume":
+			if (serverQueue && !serverQueue.playing) {
+				serverQueue.playing = true;
+				serverQueue.connection.dispatcher.resume();
+				return message.channel.send('▶ Resumed the music for you!');
+			}
+			return message.channel.send('**There is nothing playing.**');
+
+
+			return undefined;
+			break;
+	}
+
+	async function handleVideo(video, message, voiceChannel, playlist = false) {
+		var serverQueue = queue.get(message.guild.id);
+		console.log(video);
+		var song = {
+			id: video.id,
+			title: video.title,
+			url: `https://www.youtube.com/watch?v=${video.id}`
+		};
+
+		if (!serverQueue) {
+			var queueConstruct = {
+				textChannel: message.channel,
+				voiceChannel: voiceChannel,
+				connection: null,
+				songs: [],
+				volume: 5,
+				playing: true
+			};
+			queue.set(message.guild.id, queueConstruct);
+
+			queueConstruct.songs.push(song);
+
+			try {
+				var connection = await voiceChannel.join();
+				queueConstruct.connection = connection;
+				play(message.guild, queueConstruct.songs[0]);
+			} catch (error) {
+				console.error(`I could not join the voice channel: ${error}`);
+				queue.delete(message.guild.id);
+				return message.channel.send(`I could not join the voice channel: ${error}`);
+			}
+		} else {
+			serverQueue.songs.push(song);
+			console.log(serverQueue.songs);
+			if (playlist) return undefined;
+			else return message.channel.send(`**${song.title}** has been added to the queue!`);
+		}
+
+		return undefined;
+	}
+
+	function play(guild, song) {
+		var serverQueue = queue.get(guild.id);
+
+		if (!song) {
+			serverQueue.voiceChannel.leave();
+			queue.delete(guild.id);
+			return;
+
+		}
+
+		console.log(serverQueue.songs);
+
+		const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
+			.on('end', reason => {
+				//message.channel.send('``The queue of song is end.``');
+				if (reason === 'Stream is not generating quickly enough.') console.log('Song ended.');
+				else console.log(reason);
+				serverQueue.songs.shift();
+				play(guild, serverQueue.songs[0]);
+
+			})
+			.on('error', error => console.error(error));
+		dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+		serverQueue.textChannel.send(`🎶 Start playing: **${song.title}**`);
+	}
+});
 
 fs.readdir("./commands/", (err, files) => {
 	if (err) console.log(err);
