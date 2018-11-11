@@ -16,6 +16,7 @@ module.exports.run = async (bot, message, args) => {
         await msg.react('👮')
         await msg.react('😂')
         await msg.react('⛏')
+        await msg.react('🎶')
         await msg.react('💦')
         await msg.react('👌')
 
@@ -197,6 +198,26 @@ module.exports.run = async (bot, message, args) => {
 
                 msg.edit(embed6);
             });
+        })
+
+        const musicfilter = (reaction, user) => reaction.emoji.name === '🎶' && user.id === message.author.id;
+        const music = msg.createReactionCollector(musicfilter, { time: 10000000 });
+
+        music.on('collect', client6 => {
+            const embed7 = new Discord.RichEmbed()
+                .setAuthor('Music Commands', message.author.displayAvatarURL)
+                .setColor(config.doggo)
+                .setImage('https://i.imgur.com/vXRfAd6.gif')
+                .addField("**play**", "Plays a song")
+                .addField("**skip**", "Skips a song")
+                .addField("**stop**", "Stops playing")
+                .addField("**vol**", "Changes volume of music")
+                .addField("**np**", "Checks what is currently playing")
+                .addField("**queue**", "SHows the queue of songs")
+                .addField("**pause**", "Pauses a song")
+                .addField("**resume**", "Resumes a song")
+
+            msg.edit(embed7);
         })
     });
 }

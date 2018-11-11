@@ -31,6 +31,7 @@ var servers = {};
 //TODO: 1) figure out more things to do with mongoose
 //TODO: 2) add the word filter to editted messages
 //TODO: 3) make things, such as word filter, optional in the mongod database
+//TODO: 4) add music commands to help command
 
 bot.on("message", async message => {
 	let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
@@ -117,8 +118,6 @@ bot.on("message", async message => {
 			serverQueue.songs = [];
 			serverQueue.connection.dispatcher.end('**Stop command has been used!**');
 			return undefined;
-
-
 
 		case "vol":
 			if (!message.member.voiceChannel) return errors.notInVC(message);
