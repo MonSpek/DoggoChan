@@ -12,6 +12,7 @@ const botconfig = require("./botconfig.json"),
 	activities = require("./assets/activity.json"),
 	bList = require("./assets/blacklist.json"),
 	errors = require("./utils/errors.js"),
+	musicCMD = require("./utils/music.js"),
 	xpMongoose = require("./models/xp.js"),
 	Money = require("./models/money.js"),
 	Reports = require("./models/reports.js"),
@@ -44,14 +45,14 @@ bot.on("message", async message => {
 	switch (args[0].toLowerCase()) {
 		case "play":
 			var voiceChannel = message.member.voiceChannel;
-			if (!voiceChannel) return message.channel.send('I\'m sorry but you need to be in a voice channel to play music!');
+			if (!voiceChannel) return errors.notInVC(message);
 
 			if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
 				var playlist = await youtube.getPlaylist(url);
 				var videos = await playlist.getVideos();
 				for (const video of Object.values(videos)) {
-					var video2 = await youtube.getVideoByID(video.id); 
-					await handleVideo(video2, message, voiceChannel, true); 
+					var video2 = await youtube.getVideoByID(video.id);
+					await handleVideo(video2, message, voiceChannel, true);
 				}
 
 				const addListQueue = new Discord.RichEmbed()
@@ -68,7 +69,7 @@ bot.on("message", async message => {
 
 						var videos = await youtube.searchVideos(searchString, 10);
 						var index = 0;
-						
+
 						const searchEmbed = new Discord.RichEmbed()
 							.setTitle("**Please provide a value to select one of the search results ranging from 1-10.**")
 							.setDescription(`${videos.map(video2 => `**${++index}**--***${video2.title}***`).join('\n')}`)
@@ -84,7 +85,7 @@ bot.on("message", async message => {
 							});
 						} catch (err) {
 							console.error(err);
-							return errors.notInVC(message);
+							return errors.noValMus(message);
 						}
 						var videoIndex = parseInt(response.first().content);
 						var video = await youtube.getVideoByID(videos[videoIndex - 1].id);
@@ -96,16 +97,16 @@ bot.on("message", async message => {
 				return handleVideo(video, message, voiceChannel);
 			}
 		case "skip":
-			if (!message.member.voiceChannel) return message.channel.send('** )Oops! You are not in a voice channel!**');
-			if (!serverQueue) return message.channel.send('**There is nothing playing that I could skip for you.**');
-			serverQueue.connection.dispatcher.end('<:humanos:497830454590963742>**Skip command has been used!**');
+			if (!message.member.voiceChannel) return errors.notInVC(message);
+			if (!serverQueue) return errors.noQueue(message);
+			serverQueue.connection.dispatcher.end("**Song Skipped**");
 			return undefined;
 			break;
 
 
 		case "stop":
-			if (!message.member.voiceChannel) return message.channel.send('**You are not in a voice channel!**');
-			if (!serverQueue) return message.channel.send('**There is nothing playing that I could stop for you.**');
+			if (!message.member.voiceChannel) return errors.notInVC(message);
+			if (!serverQueue) return errors.noQueue(message);
 			serverQueue.songs = [];
 			serverQueue.connection.dispatcher.end('**Stop command has been used!**');
 			return undefined;
@@ -113,22 +114,20 @@ bot.on("message", async message => {
 
 
 		case "vol":
-			if (!message.member.voiceChannel) return message.channel.send('__You are not in a voice channel!__');
-			if (!serverQueue) return message.channel.send('__There is nothing playing.__');
-			if (!args[1]) return message.channel.send(`**The current volume is:** ***${serverQueue.volume}***`);
+			if (!message.member.voiceChannel) return errors.notInVC(message);
+			if (!serverQueue) return errors.nothPlaying(message);
+			if (!args[1]) return musicCMD.vol(message, serverQueue);
 			serverQueue.volume = args[1];
 			serverQueue.connection.dispatcher.setVolumeLogarithmic(args[1] / 5);
-			return message.channel.send(`**I set the volume to:** **__${args[1]}__**`);
+			return musicCMD.volSet(message, args);
 
 		case "np":
-			if (!serverQueue) return message.channel.send('<:porra:497830754991210496>**There is nothing playing.**');
-			return message.channel.send(`<a:song:499288615340343317>***Now playing:*** **${serverQueue.songs[0].title}**`);
+			if (!serverQueue) return errors.nothPlaying(message);
+			return musicCMD.np(message, serverQueue);
 
 		case "queue":
-			if (!serverQueue) return message.channel.send('<:porra:497830754991210496>**There is nothing playing.**');
-			return message.channel.send(`
-        **Song queue:${serverQueue.songs.map(song => `** >> ** ${song.title}`).join('\n')}
-        **Now playing: ${serverQueue.songs[0].title}**`);
+			if (!serverQueue) return errors.nothPlaying(message);
+			return musicCMD.queue(message, serverQueue);
 
 		case "pause":
 			if (serverQueue && serverQueue.playing) {
@@ -205,7 +204,7 @@ bot.on("message", async message => {
 
 		}
 
-		console.log(serverQueue.songs);
+		//console.log(serverQueue.songs);
 
 		const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
 			.on('end', reason => {

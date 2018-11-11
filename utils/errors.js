@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const config = require("../botconfig.json")
+const config = require("../botconfig.json");
 
 module.exports.noPerms = (message, perm) => {
     let embed = new Discord.RichEmbed()
@@ -130,7 +130,7 @@ module.exports.noAnime = (message) => {
     message.channel.send(embed).then(m => m.delete(5000));
 }
 
-module.exports.notInVC = (message) => {
+module.exports.noValMus = (message) => {
     const embed = new Discord.RichEmbed()
         .setTitle("Error")
         .setDescription("No or invalid value entered, cancelling video selection.")
@@ -143,7 +143,34 @@ module.exports.obtainErr = (message) => {
     const embed = new Discord.RichEmbed()
         .setTitle("Error")
         .setDescription("I could not obtain any search results.")
-        .setColor(botconfig.red)
+        .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
+
+module.exports.notInVC = (message) => {
+    const embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("I\'m sorry but you need to be in a voice channel to use music! commands")
+        .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
+
+module.exports.noQueue = (message) => {
+    const embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("The queue is empty!")
+        .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
+
+module.exports.nothPlaying = (message) => {
+    const embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("There is nothing playing")
+        .setColor(config.red)
 
     message.channel.send(embed).then(m => m.delete(5000));
 }
