@@ -50,14 +50,17 @@ bot.on("message", async message => {
 				var playlist = await youtube.getPlaylist(url);
 				var videos = await playlist.getVideos();
 				for (const video of Object.values(videos)) {
-					var video2 = await youtube.getVideoByID(video.id); // eslint-disable-line no-await-in-loop
-					await handleVideo(video2, message, voiceChannel, true); // eslint-disable-line no-await-in-loop
+					var video2 = await youtube.getVideoByID(video.id); 
+					await handleVideo(video2, message, voiceChannel, true); 
 				}
 
-				return message.channel.send(`<:humanos:497830454590963742>Playlist: **${playlist.title}** has been added to the queue!`);
+				const addListQueue = new Discord.RichEmbed()
+					.setDescription(`**${playlist.title}** has been added to the queue!`)
+					.setColor('RANDOM')
+					.setFooter(`Done by ${message.author.username}`)
 
+				return message.channel.send(addListQueue);
 			} else {
-
 				try {
 					var video = await youtube.getVideo(url);
 				} catch (error) {
@@ -65,28 +68,29 @@ bot.on("message", async message => {
 
 						var videos = await youtube.searchVideos(searchString, 10);
 						var index = 0;
-						// lista de seleção de musicas by hijazi
-						(message.channel.send(`<a:lupa:498337345737850881>**__Song selection:__**
-${videos.map(video2 => `<a:loader:498337340914401281>**${++index}**--***${video2.title}***`).join('\n')}\n <a:bolas:498337345188266016>**Please provide a value to select one of the search results ranging from 1-10.**`));
-						// editar a ultima mensagem amanha
+						
+						const searchEmbed = new Discord.RichEmbed()
+							.setTitle("**Please provide a value to select one of the search results ranging from 1-10.**")
+							.setDescription(`${videos.map(video2 => `**${++index}**--***${video2.title}***`).join('\n')}`)
+							.setColor('RANDOM')
+							.setFooter(`Done by ${message.author.username}`)
+
+						message.channel.send(searchEmbed);
 						try {
 							var response = await message.channel.awaitMessages(message2 => message2.content > 0 && message2.content < 11, {
 								maxMatches: 1,
 								time: 100000000,
 								errors: ['time']
 							});
-
 						} catch (err) {
 							console.error(err);
-							return message.channel.send('No or invalid value entered, cancelling video selection.');
+							return errors.notInVC(message);
 						}
-
 						var videoIndex = parseInt(response.first().content);
 						var video = await youtube.getVideoByID(videos[videoIndex - 1].id);
-
 					} catch (err) {
 						console.error(err);
-						return message.channel.send('🆘 I could not obtain any search results.');
+						return errors.obtainErr(message);
 					}
 				}
 				return handleVideo(video, message, voiceChannel);

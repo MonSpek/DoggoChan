@@ -4,7 +4,7 @@ const config = require("../botconfig.json")
 module.exports.noPerms = (message, perm) => {
     let embed = new Discord.RichEmbed()
         .setAuthor(message.author.username)
-        .setColor(botconfig.red)
+        .setColor(config.red)
         .setTitle("NO PERMS")
         .addField("Insufficent permission", perm);
 
@@ -126,6 +126,24 @@ module.exports.noAnime = (message) => {
         .setTitle("Error")
         .setDescription("You did not give me an anime to look up!")
         .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
+
+module.exports.notInVC = (message) => {
+    const embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("No or invalid value entered, cancelling video selection.")
+        .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
+
+module.exports.obtainErr = (message) => {
+    const embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("I could not obtain any search results.")
+        .setColor(botconfig.red)
 
     message.channel.send(embed).then(m => m.delete(5000));
 }
