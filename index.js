@@ -34,7 +34,7 @@ var servers = {};
 
 bot.on("message", async message => {
 	let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
-
+	if (message.channel.type === "dm") return;
 	if (!prefixes[message.guild.id]) {
 		prefixes[message.guild.id] = {
 			prefixes: botconfig.prefix
@@ -517,6 +517,8 @@ bot.on('guildMemberRemove', async member => {
 });
 
 bot.on("messageUpdate", async message => {
+	if (message.channel.type === "dm") return;
+
 	//!for my server only
 	if (message.guild.id === "498112893330391041") {
 		if (!message.author.bot) {
@@ -561,20 +563,24 @@ bot.on("message", async message => {
 	}
 
 	//!for my server only
-	if (message.guild.id === "498112893330391041") {
-		if (!message.member.hasPermission("ADMINISTRATOR")) {
-			let wordfound = false;
-			for (var i in bList.words) {
-				if (message.content.toLowerCase().includes(bList.words[i].toLowerCase())) wordfound = true;
-				if (wordfound) break;
-			}
+	if (message.channel.type !== "dm") {
+		if (message.guild.id === "498112893330391041") {
+			if (!message.member.hasPermission("ADMINISTRATOR")) {
+				let wordfound = false;
+				for (var i in bList.words) {
+					if (message.content.toLowerCase().includes(bList.words[i].toLowerCase())) wordfound = true;
+					if (wordfound) break;
+				}
 
-			if (wordfound) {
-				message.delete();
-				return errors.bannedWord(message);
+				if (wordfound) {
+					message.delete();
+					return errors.bannedWord(message);
+				}
 			}
 		}
 	}
+
+	if (message.channel.type === "dm") return;
 
 	let prefix = prefixes[message.guild.id].prefixes;
 

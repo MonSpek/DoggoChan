@@ -4,6 +4,7 @@ const errors = require('../utils/errors.js');
 module.exports.run = async (bot, message, args) => {
     let text = args.join(" ");
     if (!text) {
+        await message.delete();
         errors.noApiText(message);
     } else {
         fetch.get(`https://nekobot.xyz/api/imagegen?type=TrumpTweet&text=${text}`).then(res =>
