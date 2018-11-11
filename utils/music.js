@@ -45,3 +45,14 @@ module.exports.queue = async (message, serverQueue) => {
 
     message.channel.send(embed).then(m => m.delete(11000));
 }
+
+module.exports.pause = async (message) => {
+    await message.delete();
+
+    const embed = new Discord.RichEmbed()
+        .setDescription("⏸ Paused the music for you!")
+        .setColor('RANDOM')
+        .setFooter(`Done by ${message.author.username}`)
+
+    message.channel.send(embed).then(m => m.delete(11000));
+}

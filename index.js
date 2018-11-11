@@ -133,10 +133,10 @@ bot.on("message", async message => {
 			if (serverQueue && serverQueue.playing) {
 				serverQueue.playing = false;
 				serverQueue.connection.dispatcher.pause();
-				return message.channel.send('⏸ Paused the music for you!');
+				return musicCMD.pause(message);
 			}
 
-			return message.channel.send('There is nothing playing.');
+			return errors.nothPlaying(message);
 
 			break;
 
@@ -146,7 +146,7 @@ bot.on("message", async message => {
 				serverQueue.connection.dispatcher.resume();
 				return message.channel.send('▶ Resumed the music for you!');
 			}
-			return message.channel.send('**There is nothing playing.**');
+			return errors.nothPlaying(message);
 
 
 			return undefined;
