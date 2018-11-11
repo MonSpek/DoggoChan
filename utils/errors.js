@@ -174,3 +174,12 @@ module.exports.nothPlaying = (message) => {
 
     message.channel.send(embed).then(m => m.delete(5000));
 }
+
+module.exports.cantConn = (message) => {
+    const embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("I can not connect to the the channel.")
+        .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}

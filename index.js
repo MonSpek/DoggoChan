@@ -144,7 +144,7 @@ bot.on("message", async message => {
 			if (serverQueue && !serverQueue.playing) {
 				serverQueue.playing = true;
 				serverQueue.connection.dispatcher.resume();
-				return message.channel.send('▶ Resumed the music for you!');
+				return musicCMD.resume(message);
 			}
 			return errors.nothPlaying(message);
 
@@ -182,13 +182,13 @@ bot.on("message", async message => {
 			} catch (error) {
 				console.error(`I could not join the voice channel: ${error}`);
 				queue.delete(message.guild.id);
-				return message.channel.send(`I could not join the voice channel: ${error}`);
+				return errors.cantConn(message);
 			}
 		} else {
 			serverQueue.songs.push(song);
 			console.log(serverQueue.songs);
 			if (playlist) return undefined;
-			else return message.channel.send(`**${song.title}** has been added to the queue!`);
+			else return musicCMD.addQueue(message, song);
 		}
 
 		return undefined;
@@ -204,11 +204,8 @@ bot.on("message", async message => {
 
 		}
 
-		//console.log(serverQueue.songs);
-
 		const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
 			.on('end', reason => {
-				//message.channel.send('``The queue of song is end.``');
 				if (reason === 'Stream is not generating quickly enough.') console.log('Song ended.');
 				else console.log(reason);
 				serverQueue.songs.shift();
@@ -217,7 +214,7 @@ bot.on("message", async message => {
 			})
 			.on('error', error => console.error(error));
 		dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-		serverQueue.textChannel.send(`🎶 Start playing: **${song.title}**`);
+		musicCMD.startPlay(serverQueue, song);
 	}
 });
 

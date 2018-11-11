@@ -56,3 +56,33 @@ module.exports.pause = async (message) => {
 
     message.channel.send(embed).then(m => m.delete(11000));
 }
+
+module.exports.resume = async (message) => {
+    await message.delete();
+
+    const embed = new Discord.RichEmbed()
+        .setDescription("▶ Resumed the music for you!")
+        .setFooter(`Done by ${message.author.username}`)
+        .setColor('RANDOM')
+
+    message.channel.send(embed).then(m => m.delete(11000));
+}
+
+module.exports.addQueue = async (message, song) => {
+    await message.delete();
+
+    const embed = new Discord.RichEmbed()
+        .setDescription(`**${song.title}** has been added to the queue!`)
+        .setFooter(`Done by ${message.author.username}`)
+        .setColor('RANDOM')
+
+    message.channel.send(embed).then(m => m.delete(20000));
+}
+
+module.exports.startPlay = (serverQueue, song) => {
+    const embed = new Discord.RichEmbed()
+        .setDescription(`Started Playing: **${song.title}**`)
+        .setColor('RANDOM')
+
+    serverQueue.textChannel.send(embed).then(m => m.delete(15000));
+}
