@@ -6,8 +6,8 @@ const Discord = require("discord.js"),
 	ytdl = require("ytdl-core"),
 	YouTube = require('simple-youtube-api');
 const bot = new Discord.Client({ disableEveryone: false });
-const queue = new Map();
-bot.commands = new Discord.Collection();
+const queue = new Map(); //* used for music bot
+bot.commands = new Discord.Collection(); //* used for command handeling
 const botconfig = require("./botconfig.json"),
 	activities = require("./assets/activity.json"),
 	bList = require("./assets/blacklist.json"),
@@ -18,9 +18,9 @@ const botconfig = require("./botconfig.json"),
 	Reports = require("./models/reports.js"),
 	banMongoose = require("./models/banned.js");
 
-const youtube = new YouTube(botconfig.ytToken);
+const youtube = new YouTube(botconfig.ytToken); //* sets up youtube with my API key
 
-mongoose.connect('mongodb://localhost:27017/DoggoChan', {
+mongoose.connect('mongodb://localhost:27017/DoggoChan', { //* connects to the db
 	useNewUrlParser: true
 });
 
@@ -31,10 +31,14 @@ var servers = {};
 //TODO: 1) figure out more things to do with mongoose
 //TODO: 2) add the word filter to editted messages
 //TODO: 3) make things, such as word filter, optional in the mongod database
+//TODO: 4) edit search embed with selected song
+//TODO: 5) only allow one searvch per user to be open per time
 
+//! music bot
 bot.on("message", async message => {
+	if (message.channel.type === "dm") return; //* if the message is in the dms, it will return as the music bot is not meant for the dms
+	//* gets prefix
 	let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
-	if (message.channel.type === "dm") return;
 	if (!prefixes[message.guild.id]) {
 		prefixes[message.guild.id] = {
 			prefixes: botconfig.prefix
@@ -43,129 +47,139 @@ bot.on("message", async message => {
 
 	let prefix = prefixes[message.guild.id].prefixes;
 
+	//* vars
 	var args = message.content.substring(prefix.length).split(" ");
 	if (!message.content.startsWith(prefix)) return;
 	var searchString = args.slice(1).join(' ');
 	var url = args[1] ? args[1].replace(/<(.+)>/g, '$1') : '';
 	var serverQueue = queue.get(message.guild.id);
 
-	switch (args[0].toLowerCase()) {
-		case "play":
-			var voiceChannel = message.member.voiceChannel;
-			if (!voiceChannel) return errors.notInVC(message);
+	switch (args[0].toLowerCase()) { //* handeler for music commands
+		case "play": //! play
+			var voiceChannel = message.member.voiceChannel; //* gets the VC channel of the person who sent the message
+			if (!voiceChannel) return errors.notInVC(message);  //* returns if the author is not in a VC
 
-			if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
-				var playlist = await youtube.getPlaylist(url);
-				var videos = await playlist.getVideos();
-				for (const video of Object.values(videos)) {
+			if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) { //* checks if the URL sent is a playlist
+				var playlist = await youtube.getPlaylist(url); //* saves playlist link as a playlist
+				var videos = await playlist.getVideos(); //* gets videos in playlist
+				for (const video of Object.values(videos)) { //* finds videos in list of videos from playlist var
 					var video2 = await youtube.getVideoByID(video.id);
 					await handleVideo(video2, message, voiceChannel, true);
 				}
-
+				
+				//* embed for queue add
+				//TODO: move to ./utils/music.js
 				const addListQueue = new Discord.RichEmbed()
 					.setDescription(`**${playlist.title}** has been added to the queue!`)
 					.setColor('RANDOM')
 					.setFooter(`Done by ${message.author.username}`)
 
-				return message.channel.send(addListQueue);
-			} else {
+				return message.channel.send(addListQueue); //* sends addListQueue embed
+			} else { //* if the URL !== playlist
 				try {
-					var video = await youtube.getVideo(url);
-				} catch (error) {
+					var video = await youtube.getVideo(url); //* checks if the URL is a YouTube video
+				} catch (error) { //* if it isn't a video...
 					try {
 
 						var videos = await youtube.searchVideos(searchString, 10);
 						var index = 0;
-
+						
+						//* embed for search
+						//TODO: move to ./util/music.js
 						const searchEmbed = new Discord.RichEmbed()
 							.setTitle("**Please provide a value to select one of the search results ranging from 1-10.**")
 							.setDescription(`${videos.map(video2 => `**${++index}**--***${video2.title}***`).join('\n')}`)
 							.setColor('RANDOM')
 							.setFooter(`Done by ${message.author.username}`)
 
-						message.channel.send(searchEmbed);
-						try {
+						message.channel.send(searchEmbed); //* sends search embed
+						try { //* cheks if the respopnse is a number to select a song with
 							var response = await message.channel.awaitMessages(message2 => message2.content > 0 && message2.content < 11, {
 								maxMatches: 1,
 								time: 100000000,
 								errors: ['time']
 							});
-						} catch (err) {
+						} catch (err) { //* finds error
 							console.error(err);
 							return errors.noValMus(message);
 						}
 						var videoIndex = parseInt(response.first().content);
-						var video = await youtube.getVideoByID(videos[videoIndex - 1].id);
-					} catch (err) {
+						var video = await youtube.getVideoByID(videos[videoIndex - 1].id); //* selects song
+					} catch (err) { //* logs error
 						console.error(err);
 						return errors.obtainErr(message);
 					}
 				}
-				return handleVideo(video, message, voiceChannel);
+				return handleVideo(video, message, voiceChannel); //* returns with handlevideo function
 			}
-		case "skip":
-			if (!message.member.voiceChannel) return errors.notInVC(message);
-			if (!serverQueue) return errors.noQueue(message);
-			serverQueue.connection.dispatcher.end("**Song Skipped**");
+		case "skip": //! skip
+			if (!message.member.voiceChannel) return errors.notInVC(message); //* checks if member is in a VC
+			if (!serverQueue) return errors.noQueue(message); //* chekcs if the queue is empty
+			serverQueue.connection.dispatcher.end("**Song Skipped**"); //* logs skip 
 			return undefined;
-			break;
+			break; //* end
 
-
-		case "stop":
-			if (!message.member.voiceChannel) return errors.notInVC(message);
-			if (!serverQueue) return errors.noQueue(message);
+		case "stop": //! stop
+			if (!message.member.voiceChannel) return errors.notInVC(message); //* checks if in VC
+			if (!serverQueue) return errors.noQueue(message); //* checks if the queue is empty
 			serverQueue.songs = [];
-			serverQueue.connection.dispatcher.end('**Stop command has been used!**');
-			return undefined;
+			serverQueue.connection.dispatcher.end('**Stop command has been used!**'); //* logs stop command
+			return undefined; //* end
 
-		case "vol":
-			if (!message.member.voiceChannel) return errors.notInVC(message);
-			if (!serverQueue) return errors.nothPlaying(message);
-			if (!args[1]) return musicCMD.vol(message, serverQueue);
-			serverQueue.volume = args[1];
-			serverQueue.connection.dispatcher.setVolumeLogarithmic(args[1] / 5);
-			return musicCMD.volSet(message, args);
+		case "vol": //! vol 
+			if (!message.member.voiceChannel) return errors.notInVC(message); //* checks if user is in VC
+			if (!serverQueue) return errors.nothPlaying(message); //* checks if queue is empty
+			if (!args[1]) return musicCMD.vol(message, serverQueue); //* if there is no value return with embed that has current volume
+			serverQueue.volume = args[1]; //* sets vol var
+			serverQueue.connection.dispatcher.setVolumeLogarithmic(args[1] / 5); //* sets vol
+			return musicCMD.volSet(message, args); //* returns with embed that has new vol
 
-		case "np":
-			if (!serverQueue) return errors.nothPlaying(message);
-			return musicCMD.np(message, serverQueue);
+		//TODO: add check if the bot is playing for np and queue
+		case "np": //! np
+			//* this command is for the user to see what is currently playing
+			if (!serverQueue) return errors.nothPlaying(message); //* if queue is empty, then return with error saying nothing is playing
+			return musicCMD.np(message, serverQueue); //* returns with embed that has the current playing song
 
-		case "queue":
-			if (!serverQueue) return errors.nothPlaying(message);
-			return musicCMD.queue(message, serverQueue);
+		case "queue": //! queue
+			//! this command is for the user to see the queue
+			if (!serverQueue) return errors.nothPlaying(message); //* if the queue is empty return with error saying the queue is empty
+			return musicCMD.queue(message, serverQueue); //* returns with embed that has the current queue
 
-		case "pause":
-			if (serverQueue && serverQueue.playing) {
-				serverQueue.playing = false;
-				serverQueue.connection.dispatcher.pause();
-				return musicCMD.pause(message);
+		case "pause": //! pause
+			if (serverQueue && serverQueue.playing) { //* if the queue isn't empty and the queue is playing...
+				serverQueue.playing = false;  //* sets playing to false
+				serverQueue.connection.dispatcher.pause(); //* pauses dispatcher
+				return musicCMD.pause(message); //* return with pause embed
 			}
 
-			return errors.nothPlaying(message);
+			return errors.nothPlaying(message); //* if nothing is playing return with error saying nothing is playing
 
-			break;
+			break; //* ends
 
-		case "resume":
-			if (serverQueue && !serverQueue.playing) {
-				serverQueue.playing = true;
-				serverQueue.connection.dispatcher.resume();
-				return musicCMD.resume(message);
+		case "resume": //! resume
+			if (serverQueue && !serverQueue.playing) { //* if the queue isn't empty and the bot is not playing...
+				serverQueue.playing = true; //* set playing to true
+				serverQueue.connection.dispatcher.resume(); //* resumes the dispatcher
+				return musicCMD.resume(message); //* returns with resume embed
 			}
+			
+			//TODO: change to queue empty embed in ./utill/erros.js
+			//! READ THIS NERD
 			return errors.nothPlaying(message);
 			return undefined;
 			break;
 	}
 
-	async function handleVideo(video, message, voiceChannel, playlist = false) {
-		var serverQueue = queue.get(message.guild.id);
-		console.log(video);
-		var song = {
+	async function handleVideo(video, message, voiceChannel, playlist = false) { //* function for using getting video
+		var serverQueue = queue.get(message.guild.id); //* gets server queue
+		//console.log(video); //! this logs the video but it muddies my logs and thus should be removed
+		var song = { //* sets song var
 			id: video.id,
 			title: video.title,
 			url: `https://www.youtube.com/watch?v=${video.id}`
 		};
 
-		if (!serverQueue) {
+		if (!serverQueue) { //* if the queue is empty, make new queue
 			var queueConstruct = {
 				textChannel: message.channel,
 				voiceChannel: voiceChannel,
@@ -174,20 +188,20 @@ bot.on("message", async message => {
 				volume: 5,
 				playing: true
 			};
-			queue.set(message.guild.id, queueConstruct);
+			queue.set(message.guild.id, queueConstruct); //* sets new queue
 
 			queueConstruct.songs.push(song);
 
 			try {
-				var connection = await voiceChannel.join();
-				queueConstruct.connection = connection;
-				play(message.guild, queueConstruct.songs[0]);
-			} catch (error) {
+				var connection = await voiceChannel.join(); //* joins VC
+				queueConstruct.connection = connection; 
+				play(message.guild, queueConstruct.songs[0]); //* plays song
+			} catch (error) { //* logs errors
 				console.error(`I could not join the voice channel: ${error}`);
 				queue.delete(message.guild.id);
 				return errors.cantConn(message);
 			}
-		} else {
+		} else { //* adds playlist to queue
 			serverQueue.songs.push(song);
 			console.log(serverQueue.songs);
 			if (playlist) return undefined;
@@ -197,13 +211,13 @@ bot.on("message", async message => {
 		return undefined;
 	}
 
-	function play(guild, song) {
-		var serverQueue = queue.get(guild.id);
+	function play(guild, song) { //* play function
+		var serverQueue = queue.get(guild.id); //* gets queue
 
 		if (!song) {
-			serverQueue.voiceChannel.leave();
-			queue.delete(guild.id);
-			return;
+			serverQueue.voiceChannel.leave(); //* leaves the VC is there are no songs
+			queue.delete(guild.id); //* removes the server from the queue
+			return; //* ends
 
 		}
 
