@@ -526,27 +526,6 @@ bot.on('guildMemberRemove', async member => {
 	channel.send(`${member} has left the server!`, attachment);
 });
 
-bot.on("messageUpdate", async message => {
-	if (message.channel.type === "dm") return;
-
-	//!for my server only
-	if (message.guild.id === "498112893330391041") {
-		if (!message.author.bot) {
-			let logChl = message.guild.channels.find(ch => ch.name === 'logs');
-			if (!logChl) return console.log("log error");
-
-			var d = new Date();
-			let logEmbed = new Discord.RichEmbed()
-				.setDescription("A User Has Edditted A Post")
-				.setColor(botconfig.doggo)
-				.addField(`${message.author} Eddited A Post:`, `${message.content} ()`)
-				.addField("**Date**:", `${d.toString()}`);
-
-			logChl.send(logEmbed);
-		}
-	}
-});
-
 bot.on("message", async message => {
 	let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
 
