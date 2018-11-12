@@ -1,6 +1,8 @@
 const Discord = require("discord.js");
 const config = require("../botconfig.json");
 
+//! This file is for handeling embeds for music commands
+
 module.exports.vol = async (message, serverQueue) => {
     await message.delete();
 
