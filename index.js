@@ -33,6 +33,7 @@ var servers = {};
 //TODO: 3) make things, such as word filter, optional in the mongod database
 //TODO: 4) edit search embed with selected song
 //TODO: 5) only allow one searvch per user to be open per time
+//TODO: 6) add Rivescript
 
 //! music bot
 bot.on("message", async message => {
