@@ -89,7 +89,7 @@ bot.on("message", async message => {
 						//TODO: move to ./util/music.js
 						const searchEmbed = new Discord.RichEmbed()
 							.setTitle("**Please provide a value to select one of the search results ranging from 1-10.**")
-							.setDescription(`${videos.map(video2 => `**${++index}**--***${video2.title}***`).join('\n')}`)
+							.setDescription(`${videos.map(video2 => `**${++index}**--***${video2.title.replace('*', '')}***`).join('\n')}`)
 							.setColor('RANDOM')
 							.setFooter(`Done by ${message.author.username}`)
 
