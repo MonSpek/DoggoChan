@@ -67,7 +67,7 @@ bot.on("message", async message => {
 					var video2 = await youtube.getVideoByID(video.id);
 					await handleVideo(video2, message, voiceChannel, true);
 				}
-				
+
 				//* embed for queue add
 				//TODO: move to ./utils/music.js
 				const addListQueue = new Discord.RichEmbed()
@@ -84,7 +84,7 @@ bot.on("message", async message => {
 
 						var videos = await youtube.searchVideos(searchString, 10);
 						var index = 0;
-						
+
 						//* embed for search
 						//TODO: move to ./util/music.js
 						const searchEmbed = new Discord.RichEmbed()
@@ -163,7 +163,7 @@ bot.on("message", async message => {
 				serverQueue.connection.dispatcher.resume(); //* resumes the dispatcher
 				return musicCMD.resume(message); //* returns with resume embed
 			}
-			
+
 			//TODO: change to queue empty embed in ./utill/erros.js
 			//! READ THIS NERD
 			return errors.nothPlaying(message);
@@ -195,7 +195,7 @@ bot.on("message", async message => {
 
 			try {
 				var connection = await voiceChannel.join(); //* joins VC
-				queueConstruct.connection = connection; 
+				queueConstruct.connection = connection;
 				play(message.guild, queueConstruct.songs[0]); //* plays song
 			} catch (error) { //* logs errors
 				console.error(`I could not join the voice channel: ${error}`);
