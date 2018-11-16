@@ -194,3 +194,30 @@ module.exports.cantConn = (message) => {
 
     message.channel.send(embed).then(m => m.delete(5000));
 }
+
+module.exports.noTar = (message) => {
+    let embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("You did not give me a user to give money to!")
+        .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
+
+module.exports.noAmt = (message) => {
+    let embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("Please input a valid number")
+        .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
+
+module.exports.notEgh = (message) => {
+    let embed = new Discord.RichEmbed()
+        .setTitle("Error")
+        .setDescription("You do not have enough coins to do that")
+        .setColor(config.red)
+
+    message.channel.send(embed).then(m => m.delete(5000));
+}
