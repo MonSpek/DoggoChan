@@ -283,6 +283,7 @@ const applyText2 = (canvas, text) => {
 
 
 bot.on('error', (e) => {
+	console.log('error');
 	errors.logError(e, bot, ownerID);
 });
 
