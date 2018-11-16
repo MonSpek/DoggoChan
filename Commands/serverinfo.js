@@ -11,10 +11,10 @@ module.exports.run = async (bot, message, args) => {
 		.addField("Server ID", message.guild.id, true)
 		.addField("Server Owner", `${message.guild.owner.user.username}#${message.guild.owner.user.discriminator}`, true)
 		.addField("Channels", message.guild.channels.size, true)
-        .addField("Roles", message.guild.roles.size, true)
-		.addField("Created On", `${message.channel.guild.createdAt.toUTCString().substr(0, 16)} (${checkDays(message.channel.guild.createdAt)})`, true)
-		.addField("You Joined", message.member.joinedAt, true)
-		.addField("Total Members", message.guild.memberCount, true);
+		.addField("Roles", message.guild.roles.size, true)
+		.addField("Total Members", message.guild.memberCount, true)
+		.addField("Created On", message.guild.createdAt, true)
+		.addField("You Joined", message.member.joinedAt, true);
 
 	message.channel.send(serverembed);
 }
