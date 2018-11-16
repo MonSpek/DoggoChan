@@ -283,8 +283,12 @@ const applyText2 = (canvas, text) => {
 
 
 bot.on('error', (e) => {
-	console.log('error');
+	console.log(e);
 	errors.logError(e, bot, ownerID);
+});
+
+bot.on('disconnect', () => {
+	bot.users.find(ownerID).send("I have shut down");
 });
 
 bot.on("ready", () => {
