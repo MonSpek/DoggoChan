@@ -27,6 +27,7 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', { //* connects to the db
 const recentCommands = new Set(); //* Used for cooldown system
 
 var servers = {};
+var ownerID = "264187153318281216";
 
 //TODO: 1) figure out more things to do with mongoose
 //TODO: 2) add the word filter to editted messages
@@ -280,6 +281,11 @@ const applyText2 = (canvas, text) => {
 	return ctx.font;
 };
 
+
+bot.on('error', (e) => {
+	errors.logError(e, bot, ownerID);
+});
+
 bot.on("ready", () => {
 	//* gives info on bot status
 	let pluralnonpluralservers = (bot.guilds.size > 1) ? 'Servers' : 'Server';
@@ -529,7 +535,7 @@ bot.on('guildMemberRemove', async member => {
 bot.on("message", async message => {
 	let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
 
-	if (message.channel.type === "dm") {
+	if (message.channel.type === "dm" && !message.author.bot) {
 		let embed = new Discord.RichEmbed()
 			.setTimestamp()
 			.setTitle("Direct Message To The Bot")
@@ -539,7 +545,7 @@ bot.on("message", async message => {
 			.addField(`Message: `, message.content)
 			.setFooter(`DM Bot Messages | DM Logs`)
 
-		bot.users.get("264187153318281216").send(embed);
+		bot.users.get(ownerID).send(embed);
 	}
 	if (message.channel.type !== "dm") {
 		if (!prefixes[message.guild.id]) {
@@ -547,8 +553,8 @@ bot.on("message", async message => {
 				prefixes: botconfig.prefix
 			};
 		}
-	} else {
-		console.log("DM recived")
+	} else if (!message.author.bot) {
+		console.log("DM recived");
 	}
 
 	//!for my server only

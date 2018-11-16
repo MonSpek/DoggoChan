@@ -3,6 +3,15 @@ const config = require("../botconfig.json");
 
 //! this file is for handeling embeds for errors
 
+module.exports.logError = (e, bot, ownerID) => {
+    let embed = new Discord.RichEmbed()
+        .setColor(config.red)
+        .setTitle("An Error Has Occured")
+        .addField("Error", e)
+
+    bot.users.get(ownerID).send(embed);
+}
+
 module.exports.noPerms = (message, perm) => {
     let embed = new Discord.RichEmbed()
         .setAuthor(message.author.username)
