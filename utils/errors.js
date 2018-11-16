@@ -7,7 +7,7 @@ module.exports.logError = (e, bot, ownerID) => {
     let embed = new Discord.RichEmbed()
         .setColor(config.red)
         .setTitle("An Error Has Occured")
-        .addField("Error", e)
+        .setDescription(e)
 
     bot.users.get(ownerID).send(embed);
 }
