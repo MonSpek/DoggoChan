@@ -29,11 +29,10 @@ const recentCommands = new Set(); //* Used for cooldown system
 var servers = {};
 var ownerID = "264187153318281216";
 
-//TODO: 1) figure out more things to do with mongoose
-//TODO: 2) add the word filter to editted messages
-//TODO: 3) make things, such as word filter, optional in the mongod database
-//TODO: 4) edit search embed with selected song
-//TODO: 5) only allow one search per user to be open per time
+//TODO: 1) add the word filter to editted messages
+//TODO: 2) make things, such as word filter, optional in the mongod database
+//TODO: 3) edit search embed with selected song
+//TODO: 4) only allow one search per user to be open per time
 
 //! music bot
 bot.on("message", async message => {
