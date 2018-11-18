@@ -26,7 +26,6 @@ mongoose.connect('mongodb://localhost:27017/DoggoChan', { //* connects to the db
 
 const recentCommands = new Set(); //* Used for cooldown system
 
-var servers = {};
 var ownerID = "264187153318281216";
 
 //TODO: 1) add the word filter to editted messages
