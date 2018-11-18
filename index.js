@@ -282,8 +282,13 @@ const applyText2 = (canvas, text) => {
 
 
 bot.on('error', (e) => {
-	console.log(e);
+	console.error(e);
 	errors.logError(e, bot, ownerID);
+	bot.destroy()
+	.then(() => {
+		bot.login(botconfig.token)
+	});
+
 });
 
 bot.on('disconnect', () => {
