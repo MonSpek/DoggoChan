@@ -282,8 +282,8 @@ const applyText2 = (canvas, text) => {
 
 
 bot.on('error', (e) => {
-	console.error(e);
 	errors.logError(e, bot, ownerID);
+	console.error(e);
 	bot.destroy()
 	.then(() => {
 		bot.login(botconfig.token)
